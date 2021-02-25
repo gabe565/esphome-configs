@@ -1,0 +1,49 @@
+packages:
+  common: !include packages/common.yaml
+  opengarage: !include packages/opengarage.yaml
+
+substitutions:
+  # For Home Assistant entity_id, hostname, etc.
+  device_id: garage_door
+  # Pretty name to show for entities in Home Assistant
+  device_name: Garage Door
+
+  api_password: !secret garage_door_api_password
+  ota_password: !secret garage_door_ota_password
+
+  # entity_id of the vehicle in Home Assistant
+  vehicle_id: my_vehicle
+  # Pretty name of the vehicle in Home Assistant
+  vehicle_name: My Vehicle
+
+  # Length of time that the relay should stay active.
+  # Some garage doors need the relay to stay active for longer.
+  # Longer values can slow down when button presses respond.
+  # For example, if you open the door, then quickly try to stop/close it,
+  relay_click_time: 500ms
+
+  # Height at which the door is considered open.
+  # Should be slightly larger than the distance from the ceiling to the door.
+  # Must be lower than the car threshold.
+  # Entered in cm. 
+  door_threshold: '50'
+
+  # Height at which the car is considered to be home.
+  # Should be slightly larger than the distance from the ceiling to the top of the car.
+  # Must be higher than the door threshold.
+  # Entered in cm.
+  car_threshold: '150'
+
+  # Length of time time between distance sensor updates.
+  # Lower values will detect changes more quickly, but could result in increased noise.
+  distance_update_interval: 500ms
+  # Length of time to leave the pulse pin active
+  distance_pulse_time: 20us
+
+  # SR04 sensors can be noisy. The median is taken to prevent noisy data.
+  # Higher values will slow down the distance sensor's responsiveness,
+  # but will result in more consistent data.
+  # See https://esphome.io/components/sensor/index.html#median
+  distance_median_window_size: '31'
+  # When the first value should be sent. Must be lower than the distance_median_window_size.
+  distance_median_send_first_at: '5'

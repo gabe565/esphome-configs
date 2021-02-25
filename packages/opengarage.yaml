@@ -1,0 +1,108 @@
+esphome:
+  platform: ESP8266
+  board: esp01_1m
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: GPIO0
+      mode: INPUT_PULLUP
+    id: physical_button
+    on_press:
+      - switch.turn_on: relay
+
+  - platform: template
+    name: $vehicle_name
+    device_class: presence
+    lambda: |-
+      if ($car_threshold < id(distance).state) {
+        return false;
+      }
+      if ($door_threshold < id(distance).state) {
+        return true;
+      }
+      return {};
+    on_state:
+      - then:
+          - homeassistant.service:
+              service: device_tracker.see
+              data:
+                dev_id: $vehicle_id
+                host_name: $vehicle_name
+              data_template:
+                location_name: '{{ location_name }}'
+              variables:
+                location_name: 'return x ? "home" : "not_home";'
+
+cover:
+  - platform: template
+    name: $device_name
+    id: garage_door_cover
+    device_class: garage
+    lambda: 'return id(distance).state < $door_threshold ? COVER_OPEN : COVER_CLOSED;'
+    open_action:
+      - if:
+          condition:
+            lambda: 'return id(garage_door_cover).position == COVER_CLOSED;'
+          then:
+            - switch.turn_on: relay
+    close_action:
+      - if:
+          condition:
+            lambda: 'return id(garage_door_cover).position == COVER_OPEN;'
+          then:
+            - switch.turn_on: relay
+
+sensor:
+  - platform: ultrasonic
+    trigger_pin: GPIO12
+    echo_pin: GPIO14
+    name: $device_name Distance
+    id: distance
+    update_interval: $distance_update_interval
+    unit_of_measurement: cm
+    pulse_time: $distance_pulse_time
+    timeout: 3m
+    filters:
+      # Sets the value to the max if the sensor times out
+      - lambda: 'return isnan(x) ? 3 : x;'
+      # Take median of the last 5 values
+      - median:
+          window_size: $distance_median_window_size
+          send_first_at: $distance_median_send_first_at
+      # Convert m to cm
+      - multiply: 100
+      - delta: 1
+
+status_led:
+  pin:
+    number: GPIO2
+    inverted: true
+
+switch:
+  - platform: gpio
+    pin: GPIO15
+    id: relay
+    restore_mode: ALWAYS_OFF
+    on_turn_on:
+      # Only pulse on for $relay_click_time
+      - delay: $relay_click_time
+      - switch.turn_off: relay
+
+output:
+  - platform: esp8266_pwm
+    pin: GPIO13
+    id: buzzer_pwm
+
+rtttl:
+  output: buzzer_pwm
+
+api:
+  services:
+    - service: play_rtttl
+      variables:
+        song_str: string
+      then:
+        - rtttl.play:
+            rtttl: !lambda 'return song_str;'
+
