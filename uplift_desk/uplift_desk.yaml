@@ -1,0 +1,17 @@
+packages:
+  common: !include packages/common.yaml
+  uplift_desk: !include packages/uplift_desk.yaml
+
+esphome:
+  platform: ESP8266
+  board: nodemcuv2
+
+substitutions:
+  device_id: uplift_desk
+  device_name: Uplift Desk
+  api_password: !secret uplift_desk_api_password
+  ota_password: !secret uplift_desk_ota_password
+  location: Study
+
+  tx_pin: D6
+  rx_pin: D5

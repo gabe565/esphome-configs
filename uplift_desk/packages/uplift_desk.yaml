@@ -1,0 +1,121 @@
+status_led:
+  pin:
+    number: D0
+    inverted: true
+
+uart:
+  tx_pin: $tx_pin
+  rx_pin: $rx_pin
+  baud_rate: 9600
+
+uplift_desk:
+  id: desk
+
+sensor:
+  - platform: uplift_desk
+    height:
+      name: $device_name Height
+      id: height_sensor
+    state:
+      id: state_sensor
+      on_value:
+        then:
+          - lambda: |-
+              if (x == uplift_desk::STATE_IDLE) {
+                id(move_up_switch).turn_off();
+                id(move_down_switch).turn_off();
+              }
+
+switch:
+  # Up
+  - platform: template
+    name: $device_name Up
+    id: move_up_switch
+    optimistic: true
+    icon: mdi:arrow-up
+    turn_on_action:
+      - switch.turn_off: move_down_switch
+      - while:
+          condition:
+            lambda: 'return true;'
+          then:
+            - lambda: |
+                id(desk).move_up();
+            - delay: 1s
+    turn_off_action:
+      - lambda: |
+          id(desk).stop();
+
+  # Down
+  - platform: template
+    name: $device_name Down
+    id: move_down_switch
+    optimistic: true
+    icon: mdi:arrow-down
+    turn_on_action:
+      - switch.turn_off: move_up_switch
+      - while:
+          condition:
+            lambda: 'return true;'
+          then:
+            - lambda: |
+                id(desk).move_down();
+            - delay: 1s
+    turn_off_action:
+      - lambda: |
+          id(desk).stop();
+
+  # Save Height 1
+  - platform: template
+    name: $device_name Save Sit Height
+    id: save_sit_switch
+    icon: mdi:floppy
+    turn_on_action:
+      - lambda: |
+          id(save_sit_switch).publish_state(true);
+          id(desk).save_sit();
+          id(save_sit_switch).publish_state(false);
+
+  # Save Height 2
+  - platform: template
+    name: $device_name Save Stand Height
+    id: save_stand_switch
+    icon: mdi:floppy
+    turn_on_action:
+      - lambda: |
+          id(save_stand_switch).publish_state(true);
+          id(desk).save_stand();
+          id(save_stand_switch).publish_state(false);
+
+  # Recall Height 1
+  - platform: template
+    name: $device_name Sitting Height
+    id: sit_switch
+    icon: mdi:chair-rolling
+    turn_on_action:
+      - lambda: |
+          id(sit_switch).publish_state(true);
+          id(desk).sit();
+          id(sit_switch).publish_state(false);
+
+  # Recall Height 2
+  - platform: template
+    name: $device_name Standing Height
+    id: stand_switch
+    icon: mdi:human-handsup
+    turn_on_action:
+      - lambda: |
+          id(stand_switch).publish_state(true);
+          id(desk).stand();
+          id(stand_switch).publish_state(false);
+
+  # Manual Sync
+  - platform: template
+    name: $device_name Sync
+    id: sync_switch
+    icon: mdi:sync
+    turn_on_action:
+      - lambda: |
+          id(sync_switch).publish_state(true);
+          id(desk).sync();
+          id(sync_switch).publish_state(false);
