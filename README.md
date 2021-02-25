@@ -1,6 +1,6 @@
-# ESPHome OpenGarage
+# ESPHome Configs
 
-An [ESPHome](https://esphome.io) configuration for [OpenGarage](https://opengarage.io) devices. Uses the official pin layout defined [here](https://github.com/OpenGarage/OpenGarage-Hardware/blob/master/Schematic/1.1/PINs.txt).
+A collection of my personal [ESPHome](https://esphome.io) configs and packages.
 
 
 ## Common
