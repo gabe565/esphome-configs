@@ -17,7 +17,7 @@ The pinout based on the linked photos is as follows:
 ## Setup
 
 1. Copy the [common config](../common) into your local ESPHome configurations.
-1. Copy `uplift_desk.yaml`, `packages/`, and `custom_components/` into your local ESPHome configurations.
+1. Copy `uplift_desk.yaml`, `packages/uplift_desk.yaml`, and `custom_components/` into your local ESPHome configurations.
 1. Copy the relevant lines from `secrets.yaml` and fill in random API and OTA passwords.
 1. Open `uplift_desk.yaml` and tweak the substitution values accordingly. The comments will explain each option.
 1. Device will show up in ESPHome and be ready to build!
