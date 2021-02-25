@@ -1,0 +1,97 @@
+esphome:
+  platform: ESP8266
+  board: esp01_1m
+
+logger:
+  baud_rate: 0
+
+output:
+  - platform: esp8266_pwm
+    id: pwm_red
+    frequency: 120 Hz
+    pin: GPIO12
+  - platform: esp8266_pwm
+    id: pwm_green
+    frequency: 120 Hz
+    pin: GPIO5
+  - platform: esp8266_pwm
+    id: pwm_blue
+    frequency: 120 Hz
+    pin: GPIO13
+
+light:
+  - platform: rgb
+    name: "$device_name"
+    id: light_strip
+    red: pwm_red
+    green: pwm_green
+    blue: pwm_blue
+    effects:
+      - random:
+          name: Random - Slow
+          transition_length: 29s
+          update_interval: 30s
+      - random:
+          name: Random - Fast
+          transition_length: 4s
+          update_interval: 5s
+      - flicker:
+          intensity: 3%
+      - automation:
+          name: Audio Sync
+          sequence:
+            - component.update: mic
+            - delay: 5ms
+
+binary_sensor:
+  # Physical button
+  - platform: gpio
+    id: button
+    pin:
+      number: GPIO4
+      mode: INPUT_PULLUP
+    on_press:
+      - light.toggle: light_strip
+
+sensor:
+  # Mic
+  - platform: adc
+    pin: A0
+    id: mic
+    update_interval: never
+    unit_of_measurement: '%'
+    filters:
+      # Max filter
+      - lambda: |-
+          const size_t window_size_ = 20;
+          const size_t send_every_ = 20;
+          static size_t send_at_ = 0;
+
+          static std::deque<float> queue_;
+          if (!isnan(x)) {
+            if (queue_.size() >= window_size_) {
+              queue_.pop_front();
+            }
+            queue_.push_back(x);
+          }
+
+          if (++send_at_ >= send_every_) {
+            send_at_ = 0;
+            if (!queue_.empty()) {
+              std::deque<float>::iterator it = std::max_element(queue_.begin(), queue_.end());
+              return *it;
+            }
+            return 0.0f;
+          }
+          return {};
+    on_value:
+      then:
+        - lambda: |
+            auto call = id(light_strip).turn_on();
+            call.set_transition_length(90);
+            call.set_brightness(id(mic).state);
+            // Do not publish state to eliminate flooding of logs
+            call.set_publish(false);
+            call.set_save(false);
+            call.perform();
+

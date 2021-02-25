@@ -1,0 +1,9 @@
+packages:
+  common: !include packages/common.yaml
+  nitebird: !include packages/nitebird.yaml
+
+substitutions:
+  device_id: light_strip
+  device_name: Light Strip
+  api_password: !secret light_strip_api_password
+  ota_password: !secret light_strip_ota_password
