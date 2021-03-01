@@ -47,3 +47,19 @@ substitutions:
   distance_median_window_size: '31'
   # When the first value should be sent. Must be lower than the distance_median_window_size.
   distance_median_send_first_at: '5'
+
+  # Sound the alarm on open/close
+  # RTTL format references:
+  #  - https://esphome.io/components/rtttl.html?highlight=rtttl#common-beeps
+  #  - https://en.wikipedia.org/wiki/Ring_Tone_Transfer_Language
+  open_alarm: 'false'
+  open_alarm_rtttl: 'open_slide:d=128,o=5,b=100:c,d,e,g,4c6.,4p,c,d,e,g,4c6.,4p'
+  # open_alarm_rtttl: 'open_pulse:d=16,o=5,b=100:c,c6,p.,c,c6,p.,c,c6,p.'
+  # open_alarm_rtttl: 'two_short:d=8,o=6,b=100:c,p,c'
+  # open_alarm_rtttl: 'long:d=1,o=6,b=100:c'
+
+  close_alarm: 'false'
+  close_alarm_rtttl: 'close_slide:d=128,o=5,b=100:c6,g,e,d,4c.,4p,c6,g,e,d,4c.,4p'
+  # close_alarm_rtttl: 'close_pulse:d=16,o=5,b=100:c6,c,p.,c6,c,p.,c6,c,p.'
+  # close_alarm_rtttl: 'two_short:d=8,o=5,b=100:c,p,c'
+  # close_alarm_rtttl: 'long:d=1,o=5,b=100:c'

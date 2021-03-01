@@ -45,12 +45,28 @@ cover:
           condition:
             lambda: 'return id(garage_door_cover).position == COVER_CLOSED;'
           then:
+            - if:
+                condition:
+                  lambda: 'return $open_alarm;'
+                then:
+                  - rtttl.play:
+                      rtttl: $open_alarm_rtttl
+                  - wait_until:
+                      not: rtttl.is_playing
             - switch.turn_on: relay
     close_action:
       - if:
           condition:
             lambda: 'return id(garage_door_cover).position == COVER_OPEN;'
           then:
+            - if:
+                condition:
+                  lambda: 'return $close_alarm;'
+                then:
+                  - rtttl.play:
+                      rtttl: $close_alarm_rtttl
+                  - wait_until:
+                      not: rtttl.is_playing
             - switch.turn_on: relay
 
 sensor:
