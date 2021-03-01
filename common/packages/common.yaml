@@ -1,5 +1,5 @@
 esphome:
-  name: $device_name
+  name: $device_id
 
 wifi:
   ssid: !secret wifi_ssid
