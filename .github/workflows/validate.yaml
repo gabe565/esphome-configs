@@ -1,0 +1,45 @@
+name: Validate
+
+on: push
+
+jobs:
+  validate:
+    name: Validate
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        package: ["nitebird_light_strip", "opengarage", "uplift_desk"]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+      - name: Setup pip cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+      - name: Install ESPHome
+        run: |
+          pip install --upgrade --upgrade-strategy eager esphome
+      - name: Install yq
+        run: |
+          brew install yq
+      - name: Copy common config
+        run: |
+          cp common/packages/common.yaml ${{ matrix.package }}/packages/common.yaml
+      - name: Template secrets
+        run: |
+          yq eval --inplace 'keys | .[] as $val ireduce({}; .[$val] = "test_" + $val)' \
+            ${{ matrix.package }}/secrets.yaml common/secrets.yaml
+      - name: Test Config
+        run: |
+          for config in ${{ matrix.package }}/*.yaml; do
+            if [[ "$config" != */secrets.yaml ]]; then
+              esphome "$config" config
+            fi
+          done
