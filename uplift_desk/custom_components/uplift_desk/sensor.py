@@ -2,7 +2,7 @@ from esphome.core import coroutine
 import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome.components import sensor
-from esphome.const import CONF_ID
+from esphome.const import CONF_ID, DEVICE_CLASS_EMPTY
 from . import UpliftDeskComponent
 
 DEPENDENCIES = ["uplift_desk"]
@@ -22,10 +22,10 @@ UNIT_INCHES = "in"
 CONFIG_SCHEMA = cv.Schema({
     cv.GenerateID(): cv.use_id(UpliftDeskComponent),
     cv.Optional(CONF_HEIGHT): sensor.sensor_schema(
-        UNIT_INCHES, ICON_ARROW_EXPAND_VERTICAL, 1
+        UNIT_INCHES, ICON_ARROW_EXPAND_VERTICAL, 1, DEVICE_CLASS_EMPTY
     ),
     cv.Optional(CONF_STATE): sensor.sensor_schema(
-        cv.UNDEFINED, cv.UNDEFINED, 0
+        cv.UNDEFINED, cv.UNDEFINED, 0, DEVICE_CLASS_EMPTY
     ),
 })
 
