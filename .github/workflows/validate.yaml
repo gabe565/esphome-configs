@@ -27,8 +27,9 @@ jobs:
         run: |
           pip install --upgrade --upgrade-strategy eager esphome
       - name: Install yq
-        run: |
-          brew install yq
+        uses: chrisdickinson/setup-yq@latest
+        with:
+          yq-version: 'v4.7.1'
       - name: Copy common config
         run: |
           cp common/packages/common.yaml ${{ matrix.package }}/packages/common.yaml
