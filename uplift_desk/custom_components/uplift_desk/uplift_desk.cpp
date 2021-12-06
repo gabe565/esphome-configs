@@ -25,6 +25,13 @@ const uint8_t UPLIFT_DESK_RECALL_SITTING = 0x05;
 const uint8_t UPLIFT_DESK_RECALL_STANDING = 0x06;
 const uint8_t UPLIFT_DESK_SYNC = 0x07;
 
+void log_buffer(uint8_t *buffer, uint8_t eot_index) {
+  for (uint8_t i = 0; i <= eot_index; i++) {
+    ESP_LOGV(TAG, "  i=%u: 0b" BYTE_TO_BINARY_PATTERN " (0x%02X, %i)", i, BYTE_TO_BINARY(buffer[i]),
+             buffer[i], buffer[i]);
+  }
+}
+
 UpliftDeskComponent::UpliftDeskComponent() : uart::UARTDevice() {};
 
 void UpliftDeskComponent::loop() {
@@ -62,7 +69,8 @@ bool UpliftDeskComponent::check_byte_() {
       checksum += this->buffer_[i];
     }
     if (checksum != this->buffer_[checksum_index]) {
-      ESP_LOGW(TAG, "Invalid checksum: 0x%02X != 0x%02X", checksum, this->buffer_[checksum_index]);
+      ESP_LOGW(TAG, "Invalid checksum: got 0x%02X, expected 0x%02X", this->buffer_[crc_index], crc);
+      log_buffer(this->buffer_, this->eot_index_);
       return false;
     }
     return true;
@@ -97,10 +105,7 @@ void UpliftDeskComponent::parse_data_() {
     }
     default: {
       ESP_LOGV(TAG, "Unknown data: ");
-      for (uint8_t i = 0; i <= this->last_index_; i++) {
-        ESP_LOGV(TAG, "  i=%u: 0b" BYTE_TO_BINARY_PATTERN " (0x%02X, %i)", i, BYTE_TO_BINARY(this->buffer_[i]),
-                 this->buffer_[i], this->buffer_[i]);
-      }
+      log_buffer(this->buffer_, this->eot_index_);
       break;
     }
   }
