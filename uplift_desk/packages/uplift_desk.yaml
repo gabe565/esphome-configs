@@ -18,13 +18,6 @@ sensor:
       id: height_sensor
     state:
       id: state_sensor
-      on_value:
-        then:
-          - lambda: |-
-              if (x == uplift_desk::STATE_IDLE) {
-                id(move_up_switch).turn_off();
-                id(move_down_switch).turn_off();
-              }
 
 switch:
   # Up
@@ -37,14 +30,18 @@ switch:
       - switch.turn_off: move_down_switch
       - while:
           condition:
-            lambda: 'return true;'
+            lambda: "return true;"
           then:
             - lambda: |
-                id(desk).move_up();
+                id(desk).send_cmd_up();
             - delay: 1s
     turn_off_action:
-      - lambda: |
-          id(desk).stop();
+      if:
+        condition:
+          switch.is_off: move_down_switch
+        then:
+          lambda: |
+            id(desk).send_cmd_stop();
 
   # Down
   - platform: template
@@ -56,14 +53,18 @@ switch:
       - switch.turn_off: move_up_switch
       - while:
           condition:
-            lambda: 'return true;'
+            lambda: "return true;"
           then:
             - lambda: |
-                id(desk).move_down();
+                id(desk).send_cmd_down();
             - delay: 1s
     turn_off_action:
-      - lambda: |
-          id(desk).stop();
+      if:
+        condition:
+          switch.is_off: move_up_switch
+        then:
+          lambda: |
+            id(desk).send_cmd_stop();
 
   # Save Height 1
   - platform: template
@@ -71,10 +72,10 @@ switch:
     id: save_sit_switch
     icon: mdi:floppy
     turn_on_action:
-      - lambda: |
-          id(save_sit_switch).publish_state(true);
-          id(desk).save_sit();
-          id(save_sit_switch).publish_state(false);
+      lambda: |
+        id(save_sit_switch).publish_state(true);
+        id(desk).send_cmd_save_sit();
+        id(save_sit_switch).publish_state(false);
 
   # Save Height 2
   - platform: template
@@ -82,10 +83,10 @@ switch:
     id: save_stand_switch
     icon: mdi:floppy
     turn_on_action:
-      - lambda: |
-          id(save_stand_switch).publish_state(true);
-          id(desk).save_stand();
-          id(save_stand_switch).publish_state(false);
+      lambda: |
+        id(save_stand_switch).publish_state(true);
+        id(desk).send_cmd_save_stand();
+        id(save_stand_switch).publish_state(false);
 
   # Recall Height 1
   - platform: template
@@ -93,10 +94,10 @@ switch:
     id: sit_switch
     icon: mdi:chair-rolling
     turn_on_action:
-      - lambda: |
-          id(sit_switch).publish_state(true);
-          id(desk).sit();
-          id(sit_switch).publish_state(false);
+      lambda: |
+        id(sit_switch).publish_state(true);
+        id(desk).send_cmd_sit();
+        id(sit_switch).publish_state(false);
 
   # Recall Height 2
   - platform: template
@@ -104,10 +105,10 @@ switch:
     id: stand_switch
     icon: mdi:human-handsup
     turn_on_action:
-      - lambda: |
-          id(stand_switch).publish_state(true);
-          id(desk).stand();
-          id(stand_switch).publish_state(false);
+      lambda: |
+        id(stand_switch).publish_state(true);
+        id(desk).send_cmd_stand();
+        id(stand_switch).publish_state(false);
 
   # Manual Sync
   - platform: template
@@ -115,7 +116,7 @@ switch:
     id: sync_switch
     icon: mdi:sync
     turn_on_action:
-      - lambda: |
-          id(sync_switch).publish_state(true);
-          id(desk).sync();
-          id(sync_switch).publish_state(false);
+      lambda: |
+        id(sync_switch).publish_state(true);
+        id(desk).send_cmd_sync();
+        id(sync_switch).publish_state(false);
