@@ -69,10 +69,14 @@ bool UpliftDeskComponent::check_byte_() {
 
   if (index == 0 || index == 1 ) {
     return byte == 0xF2;
-  } else if (index == 3) {
+  }
+
+  if (index == 3) {
     this->eot_index_ = index + byte + 2;  // CRC and EOT not included
     return true;
-  } else if (index == this->eot_index_ - 1) {
+  }
+
+  if (index == this->eot_index_ - 1) {
     const uint8_t crc_index = this->eot_index_ - 1;
     uint8_t crc = 0;
     for (uint8_t i = 2; i < crc_index; i++) {
@@ -84,7 +88,9 @@ bool UpliftDeskComponent::check_byte_() {
       return false;
     }
     return true;
-  } else if (index == this->eot_index_) {
+  }
+
+  if (index == this->eot_index_) {
     return byte == 0x7E;
   }
 
@@ -123,7 +129,7 @@ void UpliftDeskComponent::parse_data_() {
 
 void UpliftDeskComponent::reset_buffer_() {
   this->buffer_index_ = 0;
-  this->eot_index_ = UPLIFT_DESK_BUFFER_LENGTH;
+  this->eot_index_ = UPLIFT_DESK_BUFFER_LENGTH - 1;
 }
 
 void UpliftDeskComponent::send_cmd_(const uint8_t cmd) {
