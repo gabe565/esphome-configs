@@ -28,7 +28,7 @@ class UpliftDeskComponent : public Component, public uart::UARTDevice {
  public:
   UpliftDeskComponent();
 
-  void setup() override { this->sync(); };
+  void setup() override { this->send_cmd_sync(); };
   void loop() override;
   void dump_config() override;
 
@@ -37,14 +37,14 @@ class UpliftDeskComponent : public Component, public uart::UARTDevice {
   void set_state_sensor(sensor::Sensor *state_sensor) { this->state_sensor_ = state_sensor; }
   sensor::Sensor *get_state_sensor() { return this->state_sensor_; }
 
-  void move_up() { this->send_cmd_(UPLIFT_DESK_UP); }
-  void move_down() { this->send_cmd_(UPLIFT_DESK_DOWN); }
-  void stop() { this->send_cmd_(UPLIFT_DESK_STOP); }
-  void save_sit() { this->send_cmd_(UPLIFT_DESK_SAVE_SITTING); }
-  void save_stand() { this->send_cmd_(UPLIFT_DESK_SAVE_STANDING); }
-  void sit() { this->send_cmd_(UPLIFT_DESK_RECALL_SITTING); }
-  void stand() { this->send_cmd_(UPLIFT_DESK_RECALL_STANDING); }
-  void sync() { this->send_cmd_(UPLIFT_DESK_SYNC); }
+  void send_cmd_up() { this->send_cmd_(UPLIFT_DESK_UP); }
+  void send_cmd_down() { this->send_cmd_(UPLIFT_DESK_DOWN); }
+  void send_cmd_stop() { this->send_cmd_(UPLIFT_DESK_STOP); }
+  void send_cmd_save_sit() { this->send_cmd_(UPLIFT_DESK_SAVE_SITTING); }
+  void send_cmd_save_stand() { this->send_cmd_(UPLIFT_DESK_SAVE_STANDING); }
+  void send_cmd_sit() { this->send_cmd_(UPLIFT_DESK_RECALL_SITTING); }
+  void send_cmd_stand() { this->send_cmd_(UPLIFT_DESK_RECALL_STANDING); }
+  void send_cmd_sync() { this->send_cmd_(UPLIFT_DESK_SYNC); }
 
  protected:
   bool check_byte_();
