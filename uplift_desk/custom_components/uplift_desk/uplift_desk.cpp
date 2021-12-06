@@ -52,7 +52,7 @@ void UpliftDeskComponent::loop() {
       this->status_set_warning();
     }
 
-    if (this->buffer_index_ == this->last_index_) {
+    if (this->buffer_index_ == this->eot_index_) {
       this->parse_data_();
       this->status_clear_warning();
       this->reset_buffer_();
@@ -70,21 +70,21 @@ bool UpliftDeskComponent::check_byte_() {
   if (index == 0 || index == 1 ) {
     return byte == 0xF2;
   } else if (index == 3) {
-    this->last_index_ = index + byte + 2;  // Add 2 due to checksum and end byte
+    this->eot_index_ = index + byte + 2;  // CRC and EOT not included
     return true;
-  } else if (index == this->last_index_ - 1) {
-    const uint8_t checksum_index = this->last_index_ - 1;
-    uint8_t checksum = 0;
-    for (uint8_t i = 2; i < checksum_index; i++) {
-      checksum += this->buffer_[i];
+  } else if (index == this->eot_index_ - 1) {
+    const uint8_t crc_index = this->eot_index_ - 1;
+    uint8_t crc = 0;
+    for (uint8_t i = 2; i < crc_index; i++) {
+      crc += this->buffer_[i];
     }
-    if (checksum != this->buffer_[checksum_index]) {
+    if (crc != this->buffer_[crc_index]) {
       ESP_LOGW(TAG, "Invalid checksum: got 0x%02X, expected 0x%02X", this->buffer_[crc_index], crc);
       log_buffer(this->buffer_, this->eot_index_);
       return false;
     }
     return true;
-  } else if (index == this->last_index_) {
+  } else if (index == this->eot_index_) {
     return byte == 0x7E;
   }
 
@@ -123,7 +123,7 @@ void UpliftDeskComponent::parse_data_() {
 
 void UpliftDeskComponent::reset_buffer_() {
   this->buffer_index_ = 0;
-  this->last_index_ = UPLIFT_DESK_BUFFER_LENGTH;
+  this->eot_index_ = UPLIFT_DESK_BUFFER_LENGTH;
 }
 
 void UpliftDeskComponent::send_cmd_(const uint8_t cmd) {

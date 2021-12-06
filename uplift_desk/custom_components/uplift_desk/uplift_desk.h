@@ -54,7 +54,7 @@ class UpliftDeskComponent : public Component, public uart::UARTDevice {
 
   uint8_t buffer_[16];
   uint8_t buffer_index_{0};
-  uint8_t last_index_{15};
+  uint8_t eot_index_{15};
   uint32_t last_transmission_{0};
   sensor::Sensor *height_sensor_{nullptr};
   sensor::Sensor *state_sensor_{nullptr};
