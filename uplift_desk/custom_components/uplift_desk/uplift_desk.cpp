@@ -13,7 +13,7 @@ const uint8_t STATE_IDLE = 0;
 const uint8_t STATE_MOVING_UP = 1;
 const uint8_t STATE_MOVING_DOWN = 2;
 
-const uint8_t UPLIFT_DESK_BUFFER_LENGTH = 12;
+const uint8_t UPLIFT_DESK_BUFFER_LENGTH = 16;
 const uint8_t UPLIFT_DESK_CMD_LENGTH = 6;
 
 const uint8_t UPLIFT_DESK_UP = 0x01;

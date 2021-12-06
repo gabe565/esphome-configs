@@ -52,9 +52,9 @@ class UpliftDeskComponent : public Component, public uart::UARTDevice {
   void send_cmd_(const uint8_t cmd);
   void reset_buffer_();
 
-  uint8_t buffer_[12];
+  uint8_t buffer_[16];
   uint8_t buffer_index_{0};
-  uint8_t last_index_{12};
+  uint8_t last_index_{15};
   sensor::Sensor *height_sensor_{nullptr};
   sensor::Sensor *state_sensor_{nullptr};
 };
