@@ -19,15 +19,17 @@ TYPES = {
 
 UNIT_INCHES = "in"
 
-CONFIG_SCHEMA = cv.Schema({
-    cv.GenerateID(): cv.use_id(UpliftDeskComponent),
-    cv.Optional(CONF_HEIGHT): sensor.sensor_schema(
-        UNIT_INCHES, ICON_ARROW_EXPAND_VERTICAL, 1, DEVICE_CLASS_EMPTY
-    ),
-    cv.Optional(CONF_STATE): sensor.sensor_schema(
-        cv.UNDEFINED, cv.UNDEFINED, 0, DEVICE_CLASS_EMPTY
-    ),
-})
+CONFIG_SCHEMA = cv.Schema(
+    {
+        cv.GenerateID(): cv.use_id(UpliftDeskComponent),
+        cv.Optional(CONF_HEIGHT): sensor.sensor_schema(
+            UNIT_INCHES, ICON_ARROW_EXPAND_VERTICAL, 1, DEVICE_CLASS_EMPTY
+        ),
+        cv.Optional(CONF_STATE): sensor.sensor_schema(
+            cv.UNDEFINED, cv.UNDEFINED, 0, DEVICE_CLASS_EMPTY
+        ),
+    }
+)
 
 
 @coroutine
@@ -43,4 +45,3 @@ def to_code(config):
     hub = yield cg.get_variable(config[CONF_ID])
     for key, funcName in TYPES.items():
         yield setup_conf(config, key, hub, funcName)
-
