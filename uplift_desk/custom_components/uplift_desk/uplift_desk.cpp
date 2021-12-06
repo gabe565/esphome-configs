@@ -34,6 +34,10 @@ void log_buffer(uint8_t *buffer, uint8_t eot_index) {
 
 UpliftDeskComponent::UpliftDeskComponent() : uart::UARTDevice() {};
 
+void UpliftDeskComponent::setup() {
+   this->defer([this]() { this->send_cmd_sync(); });
+}
+
 void UpliftDeskComponent::loop() {
   const uint32_t now = millis();
   if (now - this->last_transmission_ >= 500) {

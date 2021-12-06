@@ -28,7 +28,7 @@ class UpliftDeskComponent : public Component, public uart::UARTDevice {
  public:
   UpliftDeskComponent();
 
-  void setup() override { this->send_cmd_sync(); };
+  void setup() override;
   void loop() override;
   void dump_config() override;
 
