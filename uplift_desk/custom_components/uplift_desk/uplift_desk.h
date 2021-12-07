@@ -12,9 +12,6 @@ const extern uint8_t STATE_IDLE;
 const extern uint8_t STATE_MOVING_UP;
 const extern uint8_t STATE_MOVING_DOWN;
 
-const extern uint8_t UPLIFT_DESK_BUFFER_LENGTH;
-const extern uint8_t UPLIFT_DESK_CMD_LENGTH;
-
 const extern uint8_t UPLIFT_DESK_UP;
 const extern uint8_t UPLIFT_DESK_DOWN;
 const extern uint8_t UPLIFT_DESK_STOP;
