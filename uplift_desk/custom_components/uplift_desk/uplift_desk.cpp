@@ -123,6 +123,15 @@ void UpliftDeskComponent::parse_data_() {
         this->height_sensor_->publish_state(inches);
       break;
     }
+    case 0x25:
+    case 0x26:
+    case 0x27:
+    case 0x28: {
+      uint8_t preset = (this->buffer_[2] - 0x25) + 1;
+      ESP_LOGV(TAG, "Preset %d height: [ %d (0x%02X), %d (0x%02X) ]",
+        preset, this->buffer_[4], this->buffer_[4], this->buffer_[5], this->buffer_[5]);
+      break;
+    }
     default: {
       ESP_LOGV(TAG, "Unknown data: ");
       log_buffer(this->buffer_, this->eot_index_);
