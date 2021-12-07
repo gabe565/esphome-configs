@@ -18,10 +18,14 @@ const extern uint8_t UPLIFT_DESK_CMD_LENGTH;
 const extern uint8_t UPLIFT_DESK_UP;
 const extern uint8_t UPLIFT_DESK_DOWN;
 const extern uint8_t UPLIFT_DESK_STOP;
-const extern uint8_t UPLIFT_DESK_SAVE_SITTING;
-const extern uint8_t UPLIFT_DESK_SAVE_STANDING;
-const extern uint8_t UPLIFT_DESK_RECALL_SITTING;
-const extern uint8_t UPLIFT_DESK_RECALL_STANDING;
+const extern uint8_t UPLIFT_DESK_SAVE_PRESET_1;
+const extern uint8_t UPLIFT_DESK_SAVE_PRESET_2;
+const extern uint8_t UPLIFT_DESK_SAVE_PRESET_3;
+const extern uint8_t UPLIFT_DESK_SAVE_PRESET_4;
+const extern uint8_t UPLIFT_DESK_PRESET_1;
+const extern uint8_t UPLIFT_DESK_PRESET_2;
+const extern uint8_t UPLIFT_DESK_PRESET_3;
+const extern uint8_t UPLIFT_DESK_PRESET_4;
 const extern uint8_t UPLIFT_DESK_SYNC;
 
 class UpliftDeskComponent : public Component, public uart::UARTDevice {
@@ -40,10 +44,14 @@ class UpliftDeskComponent : public Component, public uart::UARTDevice {
   void send_cmd_up() { this->send_cmd_(UPLIFT_DESK_UP); }
   void send_cmd_down() { this->send_cmd_(UPLIFT_DESK_DOWN); }
   void send_cmd_stop() { this->send_cmd_(UPLIFT_DESK_STOP); }
-  void send_cmd_save_sit() { this->send_cmd_(UPLIFT_DESK_SAVE_SITTING); }
-  void send_cmd_save_stand() { this->send_cmd_(UPLIFT_DESK_SAVE_STANDING); }
-  void send_cmd_sit() { this->send_cmd_(UPLIFT_DESK_RECALL_SITTING); }
-  void send_cmd_stand() { this->send_cmd_(UPLIFT_DESK_RECALL_STANDING); }
+  void send_cmd_save_preset_1() { this->send_cmd_(UPLIFT_DESK_SAVE_PRESET_1); }
+  void send_cmd_save_preset_2() { this->send_cmd_(UPLIFT_DESK_SAVE_PRESET_2); }
+  void send_cmd_save_preset_3() { this->send_cmd_(UPLIFT_DESK_SAVE_PRESET_3); }
+  void send_cmd_save_preset_4() { this->send_cmd_(UPLIFT_DESK_SAVE_PRESET_4); }
+  void send_cmd_preset_1() { this->send_cmd_(UPLIFT_DESK_PRESET_1); }
+  void send_cmd_preset_2() { this->send_cmd_(UPLIFT_DESK_PRESET_2); }
+  void send_cmd_preset_3() { this->send_cmd_(UPLIFT_DESK_PRESET_3); }
+  void send_cmd_preset_4() { this->send_cmd_(UPLIFT_DESK_PRESET_4); }
   void send_cmd_sync() { this->send_cmd_(UPLIFT_DESK_SYNC); }
 
  protected:

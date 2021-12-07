@@ -19,10 +19,14 @@ const uint8_t UPLIFT_DESK_CMD_LENGTH = 6;
 const uint8_t UPLIFT_DESK_UP = 0x01;
 const uint8_t UPLIFT_DESK_DOWN = 0x02;
 const uint8_t UPLIFT_DESK_STOP = 0x2B;
-const uint8_t UPLIFT_DESK_SAVE_SITTING = 0x03;
-const uint8_t UPLIFT_DESK_SAVE_STANDING = 0x04;
-const uint8_t UPLIFT_DESK_RECALL_SITTING = 0x05;
-const uint8_t UPLIFT_DESK_RECALL_STANDING = 0x06;
+const uint8_t UPLIFT_DESK_SAVE_PRESET_1 = 0x03;
+const uint8_t UPLIFT_DESK_SAVE_PRESET_2 = 0x04;
+const uint8_t UPLIFT_DESK_SAVE_PRESET_3 = 0x25;
+const uint8_t UPLIFT_DESK_SAVE_PRESET_4 = 0x26;
+const uint8_t UPLIFT_DESK_PRESET_1 = 0x05;
+const uint8_t UPLIFT_DESK_PRESET_2 = 0x06;
+const uint8_t UPLIFT_DESK_PRESET_3 = 0x27;
+const uint8_t UPLIFT_DESK_PRESET_4 = 0x28;
 const uint8_t UPLIFT_DESK_SYNC = 0x07;
 
 void log_buffer(uint8_t *buffer, uint8_t eot_index) {

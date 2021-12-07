@@ -66,49 +66,93 @@ switch:
           lambda: |
             id(desk).send_cmd_stop();
 
-  # Save Height 1
+  # Save Preset 1
   - platform: template
-    name: $device_name Save Sit Height
-    id: save_sit_switch
+    name: $device_name Save Preset 1
+    id: save_preset_1
     icon: mdi:floppy
     turn_on_action:
       lambda: |
-        id(save_sit_switch).publish_state(true);
-        id(desk).send_cmd_save_sit();
-        id(save_sit_switch).publish_state(false);
+        id(save_preset_1).publish_state(true);
+        id(desk).send_cmd_save_preset_1();
+        id(save_preset_1).publish_state(false);
 
-  # Save Height 2
+  # Save Preset 2
   - platform: template
-    name: $device_name Save Stand Height
-    id: save_stand_switch
+    name: $device_name Save Preset 2
+    id: save_preset_2
     icon: mdi:floppy
     turn_on_action:
       lambda: |
-        id(save_stand_switch).publish_state(true);
-        id(desk).send_cmd_save_stand();
-        id(save_stand_switch).publish_state(false);
+        id(save_preset_2).publish_state(true);
+        id(desk).send_cmd_save_preset_2();
+        id(save_preset_2).publish_state(false);
 
-  # Recall Height 1
+  # Save Preset 3
   - platform: template
-    name: $device_name Sitting Height
-    id: sit_switch
-    icon: mdi:chair-rolling
+    name: $device_name Save Preset 3
+    id: save_preset_3
+    icon: mdi:floppy
     turn_on_action:
       lambda: |
-        id(sit_switch).publish_state(true);
-        id(desk).send_cmd_sit();
-        id(sit_switch).publish_state(false);
+        id(save_preset_3).publish_state(true);
+        id(desk).send_cmd_save_preset_3();
+        id(save_preset_3).publish_state(false);
 
-  # Recall Height 2
+  # Save Preset 4
   - platform: template
-    name: $device_name Standing Height
-    id: stand_switch
-    icon: mdi:human-handsup
+    name: $device_name Save Preset 4
+    id: save_preset_4
+    icon: mdi:floppy
     turn_on_action:
       lambda: |
-        id(stand_switch).publish_state(true);
-        id(desk).send_cmd_stand();
-        id(stand_switch).publish_state(false);
+        id(save_preset_4).publish_state(true);
+        id(desk).send_cmd_save_preset_4();
+        id(save_preset_4).publish_state(false);
+
+  # Preset 1
+  - platform: template
+    name: $device_name Preset 1
+    id: preset_1_switch
+    icon: mdi:numeric-1-box
+    turn_on_action:
+      lambda: |
+        id(preset_1_switch).publish_state(true);
+        id(desk).send_cmd_preset_1();
+        id(preset_1_switch).publish_state(false);
+
+  # Preset 2
+  - platform: template
+    name: $device_name Preset 2
+    id: preset_2_switch
+    icon: mdi:numeric-2-box
+    turn_on_action:
+      lambda: |
+        id(preset_2_switch).publish_state(true);
+        id(desk).send_cmd_preset_2();
+        id(preset_2_switch).publish_state(false);
+
+  # Preset 3
+  - platform: template
+    name: $device_name Preset 3
+    id: preset_3_switch
+    icon: mdi:numeric-3-box
+    turn_on_action:
+      lambda: |
+        id(preset_3_switch).publish_state(true);
+        id(desk).send_cmd_preset_3();
+        id(preset_3_switch).publish_state(false);
+
+  # Preset 4
+  - platform: template
+    name: $device_name Preset 4
+    id: preset_4_switch
+    icon: mdi:numeric-4-box
+    turn_on_action:
+      lambda: |
+        id(preset_4_switch).publish_state(true);
+        id(desk).send_cmd_preset_4();
+        id(preset_4_switch).publish_state(false);
 
   # Manual Sync
   - platform: template
