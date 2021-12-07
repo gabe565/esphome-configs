@@ -3,6 +3,10 @@ status_led:
     number: D0
     inverted: true
 
+external_components:
+  - source: github://gabe565/esphome-configs@master
+    components: [uplift_desk]
+
 uart:
   tx_pin: $tx_pin
   rx_pin: $rx_pin
