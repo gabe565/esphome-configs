@@ -24,6 +24,9 @@ const extern uint8_t UPLIFT_DESK_PRESET_2;
 const extern uint8_t UPLIFT_DESK_PRESET_3;
 const extern uint8_t UPLIFT_DESK_PRESET_4;
 const extern uint8_t UPLIFT_DESK_SYNC;
+const extern uint8_t UPLIFT_DESK_SET_MIN;
+const extern uint8_t UPLIFT_DESK_SET_MAX;
+const extern uint8_t UPLIFT_DESK_LIMIT_CLEAR;
 
 class UpliftDeskComponent : public Component, public uart::UARTDevice {
  public:
@@ -50,6 +53,9 @@ class UpliftDeskComponent : public Component, public uart::UARTDevice {
   void send_cmd_preset_3() { this->send_cmd_(UPLIFT_DESK_PRESET_3); }
   void send_cmd_preset_4() { this->send_cmd_(UPLIFT_DESK_PRESET_4); }
   void send_cmd_sync() { this->send_cmd_(UPLIFT_DESK_SYNC); }
+  void send_cmd_set_min() { this->send_cmd_(UPLIFT_DESK_SET_MIN); }
+  void send_cmd_set_max() { this->send_cmd_(UPLIFT_DESK_SET_MAX); }
+  void send_cmd_limit_clear() { this->send_cmd_(UPLIFT_DESK_LIMIT_CLEAR); }
 
  protected:
   bool check_byte_();

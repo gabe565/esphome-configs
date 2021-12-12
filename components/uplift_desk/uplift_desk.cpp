@@ -28,6 +28,9 @@ const uint8_t UPLIFT_DESK_PRESET_2 = 0x06;
 const uint8_t UPLIFT_DESK_PRESET_3 = 0x27;
 const uint8_t UPLIFT_DESK_PRESET_4 = 0x28;
 const uint8_t UPLIFT_DESK_SYNC = 0x07;
+const uint8_t UPLIFT_DESK_SET_MIN = 0x22;
+const uint8_t UPLIFT_DESK_SET_MAX = 0x21;
+const uint8_t UPLIFT_DESK_LIMIT_CLEAR = 0x23;
 
 void log_buffer(uint8_t *buffer, uint8_t eot_index) {
   for (uint8_t i = 0; i <= eot_index; i++) {
