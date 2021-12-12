@@ -46,7 +46,7 @@ light:
 binary_sensor:
   # Physical button
   - platform: gpio
-    id: button
+    id: physical_button
     pin:
       number: GPIO4
       mode: INPUT_PULLUP
