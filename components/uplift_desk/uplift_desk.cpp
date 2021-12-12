@@ -149,14 +149,7 @@ void UpliftDeskComponent::reset_buffer_() {
 }
 
 void UpliftDeskComponent::send_cmd_(const uint8_t cmd) {
-  uint8_t data[] = {0xF1, 0xF1, cmd, 0x00, 0x00, 0x7E};
-  uint8_t checksum = 0;
-
-  for (uint8_t i = 2; i < 4; i++) {
-    checksum += data[i];
-  }
-  data[4] = checksum;
-
+  uint8_t data[] = {0xF1, 0xF1, cmd, 0x00, cmd, 0x7E};
   this->write_array(data, UPLIFT_DESK_CMD_LENGTH);
 }
 
