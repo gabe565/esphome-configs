@@ -1,9 +1,26 @@
 esphome:
   name: $device_id
 
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  password: $api_password
+
+ota:
+  password: $ota_password
+
 wifi:
   ssid: !secret wifi_ssid
   password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: $device_name Fallback Hotspot
+    password: $ap_password
+
+captive_portal:
 
 sensor:
   - platform: wifi_signal
@@ -13,15 +30,10 @@ sensor:
       - median:
           window_size: 5
 
-api:
-  password: $api_password
-
-logger:
-
-ota:
-  password: $ota_password
-
 binary_sensor:
   - platform: status
     name: $device_name Status
 
+button:
+  - platform: restart
+    name: $device_name Restart
