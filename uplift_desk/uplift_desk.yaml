@@ -1,10 +1,6 @@
 packages:
   common: !include packages/common.yaml
-  uplift_desk: !include packages/uplift_desk.yaml
-
-esphome:
-  platform: ESP8266
-  board: nodemcuv2
+  nodemcu: !include packages/nodemcu.yaml
 
 substitutions:
   device_id: uplift_desk

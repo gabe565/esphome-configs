@@ -1,8 +1,9 @@
+#include "uplift_desk.h"
 #include "esphome/core/component.h"
 #include "esphome/components/uart/uart.h"
 #include "esphome/core/log.h"
 #include "esphome/components/sensor/sensor.h"
-#include "uplift_desk.h"
+#include <vector>
 
 namespace esphome {
 namespace uplift_desk {
@@ -12,25 +13,6 @@ static const char *TAG = "uplift_desk";
 const uint8_t STATE_IDLE = 0;
 const uint8_t STATE_MOVING_UP = 1;
 const uint8_t STATE_MOVING_DOWN = 2;
-
-const uint8_t UPLIFT_DESK_BUFFER_LENGTH = 16;
-const uint8_t UPLIFT_DESK_CMD_LENGTH = 6;
-
-const uint8_t UPLIFT_DESK_UP = 0x01;
-const uint8_t UPLIFT_DESK_DOWN = 0x02;
-const uint8_t UPLIFT_DESK_STOP = 0x2B;
-const uint8_t UPLIFT_DESK_SAVE_PRESET_1 = 0x03;
-const uint8_t UPLIFT_DESK_SAVE_PRESET_2 = 0x04;
-const uint8_t UPLIFT_DESK_SAVE_PRESET_3 = 0x25;
-const uint8_t UPLIFT_DESK_SAVE_PRESET_4 = 0x26;
-const uint8_t UPLIFT_DESK_PRESET_1 = 0x05;
-const uint8_t UPLIFT_DESK_PRESET_2 = 0x06;
-const uint8_t UPLIFT_DESK_PRESET_3 = 0x27;
-const uint8_t UPLIFT_DESK_PRESET_4 = 0x28;
-const uint8_t UPLIFT_DESK_SYNC = 0x07;
-const uint8_t UPLIFT_DESK_SET_MIN = 0x22;
-const uint8_t UPLIFT_DESK_SET_MAX = 0x21;
-const uint8_t UPLIFT_DESK_LIMIT_CLEAR = 0x23;
 
 void log_buffer(uint8_t *buffer, uint8_t eot_index) {
   for (uint8_t i = 0; i <= eot_index; i++) {
@@ -110,9 +92,9 @@ bool UpliftDeskComponent::check_byte_() {
 
 void UpliftDeskComponent::parse_data_() {
   switch (this->buffer_[2]) {
-    case 0x01: {
+    case 0x01: { // Height report
       float inches = ((this->buffer_[4] << 8) | this->buffer_[5]) / 10.0;
-      ESP_LOGV(TAG, "Read height: [ %d, %d ], %.1f\"", this->buffer_[4], this->buffer_[5], inches);
+      ESP_LOGV(TAG, "Height report: [ %d, %d ], %.1f\"", this->buffer_[4], this->buffer_[5], inches);
 
       if (this->state_sensor_ != nullptr) {
         uint8_t state;
@@ -130,17 +112,30 @@ void UpliftDeskComponent::parse_data_() {
         this->height_sensor_->publish_state(inches);
       break;
     }
+    case 0x20: // Height limit response
+      switch (this->buffer_[4]) {
+        case 0x00: // Cleared
+          ESP_LOGV(TAG, "Height limits cleared.");
+          break;
+        case 0x01: // Max set
+          ESP_LOGV(TAG, "Height max limit set.");
+          break;
+        case 0x10: // Min set
+          ESP_LOGV(TAG, "Height min limit set.");
+          break;
+      }
+      break;
     case 0x25:
     case 0x26:
     case 0x27:
-    case 0x28: {
+    case 0x28: { // Preset height value response
       uint8_t preset = (this->buffer_[2] - 0x25) + 1;
       ESP_LOGV(TAG, "Preset %d height: [ %d, %d ]", preset, this->buffer_[4], this->buffer_[5]);
       break;
     }
     default: {
       ESP_LOGV(TAG, "Unknown data: ");
-      log_buffer(this->buffer_, this->eot_index_);
+      // log_buffer(this->buffer_, this->eot_index_);
       break;
     }
   }
@@ -151,9 +146,27 @@ void UpliftDeskComponent::reset_buffer_() {
   this->eot_index_ = UPLIFT_DESK_BUFFER_LENGTH - 1;
 }
 
-void UpliftDeskComponent::send_cmd_(const uint8_t cmd) {
-  uint8_t data[] = {0xF1, 0xF1, cmd, 0x00, cmd, 0x7E};
-  this->write_array(data, UPLIFT_DESK_CMD_LENGTH);
+void UpliftDeskComponent::send_cmd(const uint8_t cmd) {
+  std::vector<uint8_t> args;
+  this->send_cmd(cmd, args);
+}
+
+void UpliftDeskComponent::send_cmd(const uint8_t cmd, const std::vector<uint8_t> &args) {
+  std::vector<uint8_t> data;
+  data.push_back(0xF1);
+  data.push_back(0xF1);
+  data.push_back(cmd);
+  data.push_back(args.size());
+  data.insert(data.end(), args.begin(), args.end());
+
+  uint8_t crc = cmd + args.size();
+  for (auto arg : args) {
+    crc += arg;
+  }
+  data.push_back(crc);
+
+  data.push_back(0x7E);
+  this->write_array(data);
 }
 
 void UpliftDeskComponent::dump_config() {

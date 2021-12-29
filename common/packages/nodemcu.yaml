@@ -1,0 +1,7 @@
+esp8266:
+  board: nodemcuv2
+
+status_led:
+  pin:
+    number: D0
+    inverted: true

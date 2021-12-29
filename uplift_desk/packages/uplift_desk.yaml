@@ -1,8 +1,3 @@
-status_led:
-  pin:
-    number: D0
-    inverted: true
-
 external_components:
   - source: github://gabe565/esphome-configs@master
     components: [uplift_desk]
@@ -12,120 +7,49 @@ uart:
   rx_pin: $rx_pin
   baud_rate: 9600
 
-uplift_desk:
-  id: desk
-
 sensor:
   - platform: uplift_desk
     height:
       name: $device_name Height
-      id: height_sensor
-    state:
-      id: state_sensor
 
 switch:
-  # Up
-  - platform: template
-    name: $device_name Up
-    id: move_up_switch
-    optimistic: true
-    icon: mdi:arrow-up
-    turn_on_action:
-      - switch.turn_off: move_down_switch
-      - while:
-          condition:
-            lambda: "return true;"
-          then:
-            - lambda: id(desk).send_cmd_up();
-            - delay: 1s
-    turn_off_action:
-      if:
-        condition:
-          switch.is_off: move_down_switch
-        then:
-          lambda: id(desk).send_cmd_stop();
-
-  # Down
-  - platform: template
-    name: $device_name Down
-    id: move_down_switch
-    optimistic: true
-    icon: mdi:arrow-down
-    turn_on_action:
-      - switch.turn_off: move_up_switch
-      - while:
-          condition:
-            lambda: "return true;"
-          then:
-            - lambda: id(desk).send_cmd_down();
-            - delay: 1s
-    turn_off_action:
-      if:
-        condition:
-          switch.is_off: move_up_switch
-        then:
-          lambda: id(desk).send_cmd_stop();
+  - platform: uplift_desk
+    up:
+      name: $device_name Move Up
+      id: up_switch
+    down:
+      name: $device_name Move Down
+      id: down_switch
 
 button:
-  # Save Preset 1
-  - platform: template
-    name: $device_name Save Preset 1
-    icon: mdi:floppy
-    on_press:
-      lambda: id(desk).send_cmd_save_preset_1();
-
-  # Save Preset 2
-  - platform: template
-    name: $device_name Save Preset 2
-    icon: mdi:floppy
-    on_press:
-      lambda: id(desk).send_cmd_save_preset_2();
-
-  # Save Preset 3
-  - platform: template
-    name: $device_name Save Preset 3
-    icon: mdi:floppy
-    on_press:
-      lambda: id(desk).send_cmd_save_preset_3();
-
-  # Save Preset 4
-  - platform: template
-    name: $device_name Save Preset 4
-    icon: mdi:floppy
-    on_press:
-      lambda: id(desk).send_cmd_save_preset_4();
-
-  # Preset 1
-  - platform: template
-    name: $device_name Preset 1
-    icon: mdi:numeric-1-box
-    on_press:
-      lambda: id(desk).send_cmd_preset_1();
-
-  # Preset 2
-  - platform: template
-    name: $device_name Preset 2
-    icon: mdi:numeric-2-box
-    on_press:
-      lambda: id(desk).send_cmd_preset_2();
-
-  # Preset 3
-  - platform: template
-    name: $device_name Preset 3
-    icon: mdi:numeric-3-box
-    on_press:
-      lambda: id(desk).send_cmd_preset_3();
-
-  # Preset 4
-  - platform: template
-    name: $device_name Preset 4
-    icon: mdi:numeric-4-box
-    on_press:
-      lambda: id(desk).send_cmd_preset_4();
-
-  # Manual Sync
-  - platform: template
-    name: $device_name Sync
-    icon: mdi:sync
-    on_press:
-      lambda: id(desk).send_cmd_sync();
+  - platform: uplift_desk
+    stop:
+      name: $device_name Stop
+      on_press:
+        lambda: |
+          id(up_switch).publish_state(false);
+          id(down_switch).publish_state(false);
+    preset_1:
+      name: $device_name Preset 1
+    preset_2:
+      name: $device_name Preset 2
+    preset_3:
+      name: $device_name Preset 3
+    preset_4:
+      name: $device_name Preset 4
+    save_preset_1:
+      name: $device_name Save Preset 1
+    save_preset_2:
+      name: $device_name Save Preset 2
+    save_preset_3:
+      name: $device_name Save Preset 3
+    save_preset_4:
+      name: $device_name Save Preset 4
+    sync:
+      name: $device_name Sync
+    limit_set_min:
+      name: $device_name Limit - Set Min
+    limit_set_max:
+      name: $device_name Limit - Set Max
+    limit_clear:
+      name: $device_name Limit - Clear

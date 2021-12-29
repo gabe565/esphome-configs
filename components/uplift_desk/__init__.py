@@ -5,12 +5,13 @@ from esphome.const import CONF_ID
 
 CODEOWNERS = ["@gabe565"]
 DEPENDENCIES = ["uart"]
-AUTO_LOAD = ["sensor"]
 
 uplift_desk_ns = cg.esphome_ns.namespace("uplift_desk")
 UpliftDeskComponent = uplift_desk_ns.class_(
     "UpliftDeskComponent", cg.Component, uart.UARTDevice
 )
+
+CONF_UPLIFT_DESK_ID = "uplift_desk_id"
 
 CONFIG_SCHEMA = (
     cv.Schema(
@@ -20,6 +21,12 @@ CONFIG_SCHEMA = (
     )
     .extend(cv.COMPONENT_SCHEMA)
     .extend(uart.UART_DEVICE_SCHEMA)
+)
+
+UPLIFT_DESK_COMPONENT_SCHEMA = cv.Schema(
+    {
+        cv.GenerateID(CONF_UPLIFT_DESK_ID): cv.use_id(UpliftDeskComponent),
+    }
 )
 
 
