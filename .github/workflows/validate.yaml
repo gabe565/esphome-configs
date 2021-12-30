@@ -32,7 +32,7 @@ jobs:
           yq-version: 'v4.7.1'
       - name: Copy common config
         run: |
-          cp common/packages/common.yaml ${{ matrix.package }}/packages/common.yaml
+          rsync -av --ignore-existing common/packages/ ${{ matrix.package }}/packages/
       - name: Template secrets
         run: |
           yq eval --inplace 'keys | .[] as $val ireduce({}; .[$val] = "test_" + $val)' \
