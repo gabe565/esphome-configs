@@ -23,10 +23,16 @@ TYPES = {
 CONFIG_SCHEMA = cv.Schema(
     {
         cv.Optional(CONF_HEIGHT): sensor.sensor_schema(
-            UNIT_INCHES, ICON_ARROW_EXPAND_VERTICAL, 1, DEVICE_CLASS_EMPTY
+            unit_of_measurement=UNIT_INCHES,
+            icon=ICON_ARROW_EXPAND_VERTICAL,
+            accuracy_decimals=1,
+            device_class=DEVICE_CLASS_EMPTY
         ),
         cv.Optional(CONF_STATE): sensor.sensor_schema(
-            cv.UNDEFINED, cv.UNDEFINED, 0, DEVICE_CLASS_EMPTY
+            unit_of_measurement=cv.UNDEFINED,
+            icon=cv.UNDEFINED,
+            accuracy_decimals=0,
+            device_class=DEVICE_CLASS_EMPTY
         ),
     }
 ).extend(UPLIFT_DESK_COMPONENT_SCHEMA)
