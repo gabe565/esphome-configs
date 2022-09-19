@@ -1,5 +1,5 @@
 external_components:
-  - source: github://gabe565/esphome-configs@master
+  - source: github://gabe565/esphome-configs@main
     components: [uplift_desk]
 
 uart:
