@@ -54,6 +54,13 @@ cover:
                   - wait_until:
                       not: rtttl.is_playing
             - switch.turn_on: relay
+            - cover.template.publish:
+                id: garage_door_cover
+                current_operation: OPENING
+            - delay: $open_delay
+            - cover.template.publish:
+                id: garage_door_cover
+                current_operation: IDLE
     close_action:
       - if:
           condition:
@@ -68,7 +75,24 @@ cover:
                   - wait_until:
                       not: rtttl.is_playing
             - switch.turn_on: relay
-
+            - cover.template.publish:
+                id: garage_door_cover
+                current_operation: CLOSING
+            - delay: $close_delay
+            - cover.template.publish:
+                id: garage_door_cover
+                current_operation: IDLE
+    stop_action:
+      - if:
+          condition:
+            or:
+              - lambda: 'return id(garage_door_cover).current_operation == COVER_OPERATION_OPENING;'
+              - lambda: 'return id(garage_door_cover).current_operation == COVER_OPERATION_CLOSING;'
+          then:
+            - cover.template.publish:
+                id: garage_door_cover
+                current_operation: IDLE
+            - switch.turn_on: relay
 sensor:
   - platform: ultrasonic
     trigger_pin: GPIO12
@@ -121,4 +145,3 @@ api:
       then:
         - rtttl.play:
             rtttl: !lambda 'return song_str;'
-
