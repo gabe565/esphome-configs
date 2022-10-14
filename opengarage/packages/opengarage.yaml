@@ -93,6 +93,7 @@ cover:
                 id: garage_door_cover
                 current_operation: IDLE
             - switch.turn_on: relay
+
 sensor:
   - platform: ultrasonic
     trigger_pin: GPIO12
