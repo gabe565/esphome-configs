@@ -34,6 +34,11 @@ substitutions:
   # Entered in cm.
   car_threshold: '150'
 
+  # Length of time it takes for the door to open / close.
+  # This is used to set the Opening/Closing states correctly
+  open_delay: 22s
+  close_delay: 15s
+
   # Length of time time between distance sensor updates.
   # Lower values will detect changes more quickly, but could result in increased noise.
   distance_update_interval: 500ms
