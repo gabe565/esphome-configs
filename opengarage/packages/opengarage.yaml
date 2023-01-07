@@ -10,7 +10,7 @@ binary_sensor:
       mode: INPUT_PULLUP
     id: physical_button
     on_press:
-      - switch.turn_on: relay
+      switch.turn_on: relay
 
   # Vehicle presence
   - platform: template
@@ -25,16 +25,16 @@ binary_sensor:
       }
       return {};
     on_state:
-      - then:
-          - homeassistant.service:
-              service: device_tracker.see
-              data:
-                dev_id: $vehicle_id
-                host_name: $vehicle_name
-              data_template:
-                location_name: '{{ location_name }}'
-              variables:
-                location_name: 'return x ? "home" : "not_home";'
+      then:
+        homeassistant.service:
+          service: device_tracker.see
+          data:
+            dev_id: $vehicle_id
+            host_name: $vehicle_name
+          data_template:
+            location_name: '{{ location_name }}'
+          variables:
+            location_name: 'return x ? "home" : "not_home";'
 
 cover:
   # Main cover
@@ -65,37 +65,37 @@ cover:
                 id: garage_door_cover
                 current_operation: IDLE
     close_action:
-      - if:
-          condition:
-            lambda: 'return id(garage_door_cover).position == COVER_OPEN;'
-          then:
-            - if:
-                condition:
-                  lambda: 'return $close_alarm;'
-                then:
-                  - rtttl.play:
-                      rtttl: $close_alarm_rtttl
-                  - wait_until:
-                      not: rtttl.is_playing
-            - switch.turn_on: relay
-            - cover.template.publish:
-                id: garage_door_cover
-                current_operation: CLOSING
-            - delay: $close_delay
-            - cover.template.publish:
-                id: garage_door_cover
-                current_operation: IDLE
+      if:
+        condition:
+          lambda: 'return id(garage_door_cover).position == COVER_OPEN;'
+        then:
+          - if:
+              condition:
+                lambda: 'return $close_alarm;'
+              then:
+                - rtttl.play:
+                    rtttl: $close_alarm_rtttl
+                - wait_until:
+                    not: rtttl.is_playing
+          - switch.turn_on: relay
+          - cover.template.publish:
+              id: garage_door_cover
+              current_operation: CLOSING
+          - delay: $close_delay
+          - cover.template.publish:
+              id: garage_door_cover
+              current_operation: IDLE
     stop_action:
-      - if:
-          condition:
-            or:
-              - lambda: 'return id(garage_door_cover).current_operation == COVER_OPERATION_OPENING;'
-              - lambda: 'return id(garage_door_cover).current_operation == COVER_OPERATION_CLOSING;'
-          then:
-            - cover.template.publish:
-                id: garage_door_cover
-                current_operation: IDLE
-            - switch.turn_on: relay
+      if:
+        condition:
+          or:
+            - lambda: 'return id(garage_door_cover).current_operation == COVER_OPERATION_OPENING;'
+            - lambda: 'return id(garage_door_cover).current_operation == COVER_OPERATION_CLOSING;'
+        then:
+          - cover.template.publish:
+              id: garage_door_cover
+              current_operation: IDLE
+          - switch.turn_on: relay
 
 sensor:
   # Distance sensor
@@ -150,5 +150,5 @@ api:
       variables:
         song_str: string
       then:
-        - rtttl.play:
-            rtttl: !lambda 'return song_str;'
+        rtttl.play:
+          rtttl: !lambda 'return song_str;'
