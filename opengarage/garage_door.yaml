@@ -16,11 +16,11 @@ substitutions:
   # Pretty name of the vehicle in Home Assistant
   vehicle_name: My Vehicle
 
-  # Length of time that the relay should stay active.
+  # Length of time in ms that the relay should stay active.
   # Some garage doors need the relay to stay active for longer.
   # Longer values can slow down when button presses respond.
   # For example, if you open the door, then quickly try to stop/close it,
-  relay_click_time: 500ms
+  relay_click_time: '500'
 
   # Height at which the door is considered open.
   # Should be slightly larger than the distance from the ceiling to the door.

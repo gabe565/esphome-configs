@@ -17,10 +17,10 @@ binary_sensor:
     name: $vehicle_name
     device_class: presence
     lambda: |-
-      if ($car_threshold < id(distance).state) {
+      if (id(car_threshold).state < id(distance).state) {
         return false;
       }
-      if ($door_threshold < id(distance).state) {
+      if (id(door_threshold).state < id(distance).state) {
         return true;
       }
       return {};
@@ -42,36 +42,46 @@ cover:
     name: $device_name
     id: garage_door_cover
     device_class: garage
-    lambda: 'return id(distance).state < $door_threshold ? COVER_OPEN : COVER_CLOSED;'
+    lambda: 'return id(distance).state <= id(door_threshold).state ? COVER_OPEN : COVER_CLOSED;'
     open_action:
-      - if:
-          condition:
-            lambda: 'return id(garage_door_cover).position == COVER_CLOSED;'
-          then:
-            - if:
-                condition:
-                  lambda: 'return $open_alarm;'
-                then:
-                  - rtttl.play:
-                      rtttl: $open_alarm_rtttl
-                  - wait_until:
-                      not: rtttl.is_playing
-            - switch.turn_on: relay
-            - cover.template.publish:
-                id: garage_door_cover
-                current_operation: OPENING
-            - delay: $open_delay
-            - cover.template.publish:
-                id: garage_door_cover
-                current_operation: IDLE
+      script.execute: open_door
     close_action:
+      script.execute: close_door
+    stop_action:
+      script.execute: stop_door
+
+script:
+  - id: open_door
+    then:
+      if:
+        condition:
+          lambda: 'return id(garage_door_cover).position == COVER_CLOSED;'
+        then:
+          - if:
+              condition:
+                lambda: 'return id(open_alarm).state;'
+              then:
+                - rtttl.play:
+                    rtttl: $open_alarm_rtttl
+                - wait_until:
+                    not: rtttl.is_playing
+          - switch.turn_on: relay
+          - cover.template.publish:
+              id: garage_door_cover
+              current_operation: OPENING
+          - delay: $open_delay
+          - cover.template.publish:
+              id: garage_door_cover
+              current_operation: IDLE
+  - id: close_door
+    then:
       if:
         condition:
           lambda: 'return id(garage_door_cover).position == COVER_OPEN;'
         then:
           - if:
               condition:
-                lambda: 'return $close_alarm;'
+                lambda: 'return id(close_alarm).state;'
               then:
                 - rtttl.play:
                     rtttl: $close_alarm_rtttl
@@ -85,7 +95,8 @@ cover:
           - cover.template.publish:
               id: garage_door_cover
               current_operation: IDLE
-    stop_action:
+  - id: stop_door
+    then:
       if:
         condition:
           or:
@@ -139,9 +150,25 @@ switch:
     id: relay
     restore_mode: ALWAYS_OFF
     on_turn_on:
-      # Only pulse on for $relay_click_time
-      - delay: $relay_click_time
+      # Only pulse on for relay_click_time
+      - delay: !lambda "return id(relay_click_time).state;"
       - switch.turn_off: relay
+
+  # Open alarm config
+  - platform: template
+    name: $device_name Open Alarm
+    id: open_alarm
+    restore_state: true
+    optimistic: true
+    entity_category: config
+
+  # Close alarm config
+  - platform: template
+    name: $device_name Close Alarm
+    id: close_alarm
+    restore_state: true
+    optimistic: true
+    entity_category: config
 
 output:
   # Buzzer
@@ -151,6 +178,49 @@ output:
 
 rtttl:
   output: buzzer_pwm
+
+number:
+  # Door threshold config
+  - platform: template
+    name: $device_name Door Threshold
+    id: door_threshold
+    min_value: 0
+    max_value: 300
+    step: 1
+    optimistic: true
+    restore_value: true
+    initial_value: $door_threshold
+    entity_category: config
+    mode: box
+    unit_of_measurement: cm
+
+  # Car threshold config
+  - platform: template
+    name: $device_name Car Threshold
+    id: car_threshold
+    min_value: 0
+    max_value: 300
+    step: 1
+    optimistic: true
+    restore_value: true
+    initial_value: $car_threshold
+    entity_category: config
+    mode: box
+    unit_of_measurement: cm
+
+  # Relay click time config
+  - platform: template
+    name: $device_name Relay Click Time
+    id: relay_click_time
+    min_value: 100
+    max_value: 2000
+    step: 10
+    optimistic: true
+    restore_value: true
+    initial_value: $relay_click_time
+    entity_category: config
+    mode: box
+    unit_of_measurement: ms
 
 api:
   services:
