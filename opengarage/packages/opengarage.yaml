@@ -97,6 +97,14 @@ cover:
               current_operation: IDLE
           - switch.turn_on: relay
 
+button:
+  # Frontend button
+  - platform: template
+    name: $device_name Button
+    disabled_by_default: true
+    on_press:
+      switch.turn_on: relay
+
 sensor:
   # Distance sensor
   - platform: ultrasonic
