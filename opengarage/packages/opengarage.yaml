@@ -92,10 +92,10 @@ cover:
             - lambda: 'return id(garage_door_cover).current_operation == COVER_OPERATION_OPENING;'
             - lambda: 'return id(garage_door_cover).current_operation == COVER_OPERATION_CLOSING;'
         then:
+          - switch.turn_on: relay
           - cover.template.publish:
               id: garage_door_cover
               current_operation: IDLE
-          - switch.turn_on: relay
 
 button:
   # Frontend button
