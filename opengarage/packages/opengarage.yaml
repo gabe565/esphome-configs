@@ -3,6 +3,7 @@ esphome:
   board: esp01_1m
 
 binary_sensor:
+  # Physical button
   - platform: gpio
     pin:
       number: GPIO0
@@ -11,6 +12,7 @@ binary_sensor:
     on_press:
       - switch.turn_on: relay
 
+  # Vehicle presence
   - platform: template
     name: $vehicle_name
     device_class: presence
@@ -35,6 +37,7 @@ binary_sensor:
                 location_name: 'return x ? "home" : "not_home";'
 
 cover:
+  # Main cover
   - platform: template
     name: $device_name
     id: garage_door_cover
@@ -95,6 +98,7 @@ cover:
             - switch.turn_on: relay
 
 sensor:
+  # Distance sensor
   - platform: ultrasonic
     trigger_pin: GPIO12
     echo_pin: GPIO14
@@ -121,6 +125,7 @@ status_led:
     inverted: true
 
 switch:
+  # Relay
   - platform: gpio
     pin: GPIO15
     id: relay
@@ -131,6 +136,7 @@ switch:
       - switch.turn_off: relay
 
 output:
+  # Buzzer
   - platform: esp8266_pwm
     pin: GPIO13
     id: buzzer_pwm
