@@ -16,16 +16,10 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.x'
-      - name: Setup pip cache
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-      - name: Install ESPHome
+          cache: pip
+      - name: Install requirements
         run: |
-          pip install --upgrade --upgrade-strategy eager esphome
+          pip install -r requirements.txt
       - name: Copy common config
         run: |
           rsync -av --ignore-existing common/packages/ ${{ matrix.package }}/packages/
