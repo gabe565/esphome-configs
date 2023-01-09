@@ -26,16 +26,12 @@ jobs:
       - name: Install ESPHome
         run: |
           pip install --upgrade --upgrade-strategy eager esphome
-      - name: Install yq
-        uses: chrisdickinson/setup-yq@latest
-        with:
-          yq-version: 'v4.7.1'
       - name: Copy common config
         run: |
           rsync -av --ignore-existing common/packages/ ${{ matrix.package }}/packages/
       - name: Template secrets
         run: |
-          yq eval --inplace 'keys | .[] as $val ireduce({}; .[$val] = "test_" + $val)' \
+          yq --inplace 'keys | .[] as $val ireduce({}; .[$val] = "test_" + $val)' \
             ${{ matrix.package }}/secrets.yaml common/secrets.yaml
       - name: Test Config
         run: |
