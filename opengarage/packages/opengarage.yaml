@@ -194,6 +194,7 @@ number:
     initial_value: $door_threshold
     entity_category: config
     mode: box
+    device_class: distance
     unit_of_measurement: cm
     icon: mdi:garage
 
@@ -209,6 +210,7 @@ number:
     initial_value: $car_threshold
     entity_category: config
     mode: box
+    device_class: distance
     unit_of_measurement: cm
     icon: mdi:car
 
