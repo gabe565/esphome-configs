@@ -37,8 +37,9 @@ substitutions:
 
   # Length of time it takes for the door to open / close.
   # This is used to set the Opening/Closing states correctly
-  open_delay: 22s
-  close_delay: 15s
+  # Entered in seconds.
+  open_delay: '22'
+  close_delay: '15'
 
   # Length of time time between distance sensor updates.
   # Lower values will detect changes more quickly, but could result in increased noise.

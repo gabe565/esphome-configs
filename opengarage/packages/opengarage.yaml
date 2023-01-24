@@ -69,7 +69,7 @@ script:
           - cover.template.publish:
               id: garage_door_cover
               current_operation: OPENING
-          - delay: $open_delay
+          - delay: !lambda "return 1000 * id(open_delay).state;"
           - cover.template.publish:
               id: garage_door_cover
               current_operation: IDLE
@@ -91,7 +91,7 @@ script:
           - cover.template.publish:
               id: garage_door_cover
               current_operation: CLOSING
-          - delay: $close_delay
+          - delay: !lambda "return 1000 * id(close_delay).state;"
           - cover.template.publish:
               id: garage_door_cover
               current_operation: IDLE
@@ -225,6 +225,36 @@ number:
     entity_category: config
     mode: box
     unit_of_measurement: ms
+    icon: mdi:timer
+
+  # Open delay config
+  - platform: template
+    name: $device_name Door Open Delay
+    id: open_delay
+    min_value: 5
+    max_value: 60
+    step: 1
+    optimistic: true
+    restore_value: true
+    initial_value: $open_delay
+    entity_category: config
+    mode: box
+    unit_of_measurement: s
+    icon: mdi:timer
+
+  # Close delay config
+  - platform: template
+    name: $device_name Door Close Delay
+    id: close_delay
+    min_value: 5
+    max_value: 60
+    step: 1
+    optimistic: true
+    restore_value: true
+    initial_value: $close_delay
+    entity_category: config
+    mode: box
+    unit_of_measurement: s
     icon: mdi:timer
 
 api:
