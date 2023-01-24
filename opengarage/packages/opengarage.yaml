@@ -161,6 +161,7 @@ switch:
     restore_state: true
     optimistic: true
     entity_category: config
+    icon: mdi:alarm-bell
 
   # Close alarm config
   - platform: template
@@ -169,6 +170,7 @@ switch:
     restore_state: true
     optimistic: true
     entity_category: config
+    icon: mdi:alarm-bell
 
 output:
   # Buzzer
@@ -193,6 +195,7 @@ number:
     entity_category: config
     mode: box
     unit_of_measurement: cm
+    icon: mdi:garage
 
   # Car threshold config
   - platform: template
@@ -207,6 +210,7 @@ number:
     entity_category: config
     mode: box
     unit_of_measurement: cm
+    icon: mdi:car
 
   # Relay click time config
   - platform: template
@@ -221,6 +225,7 @@ number:
     entity_category: config
     mode: box
     unit_of_measurement: ms
+    icon: mdi:timer
 
 api:
   services:
