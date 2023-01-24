@@ -20,6 +20,7 @@ substitutions:
   # Some garage doors need the relay to stay active for longer.
   # Longer values can slow down when button presses respond.
   # For example, if you open the door, then quickly try to stop/close it,
+  # Entered in milliseconds.
   relay_click_time: '500'
 
   # Height at which the door is considered open.
