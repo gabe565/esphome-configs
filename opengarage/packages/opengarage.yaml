@@ -158,7 +158,7 @@ switch:
   - platform: template
     name: $device_name Open Alarm
     id: open_alarm
-    restore_state: true
+    restore_mode: RESTORE_DEFAULT_OFF
     optimistic: true
     entity_category: config
     icon: mdi:alarm-bell
@@ -167,7 +167,7 @@ switch:
   - platform: template
     name: $device_name Close Alarm
     id: close_alarm
-    restore_state: true
+    restore_mode: RESTORE_DEFAULT_OFF
     optimistic: true
     entity_category: config
     icon: mdi:alarm-bell
