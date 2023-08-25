@@ -52,7 +52,11 @@ def uplift_desk_button_schema(
 
 CONFIG_SCHEMA = cv.Schema(
     {
-        cv.Optional(CONF_STOP): uplift_desk_button_schema(COMMAND_STOP, icon=ICON_STOP),
+        cv.Optional(CONF_STOP): uplift_desk_button_schema(
+            COMMAND_STOP,
+            icon=ICON_STOP,
+            entity_category=ENTITY_CATEGORY_NONE,
+        ),
         cv.Optional(CONF_SAVE_PRESET_1): uplift_desk_button_schema(
             COMMAND_SAVE_PRESET_1,
             icon=ICON_FLOPPY,
