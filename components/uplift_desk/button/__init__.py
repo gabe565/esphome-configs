@@ -37,11 +37,11 @@ TYPES = [
 
 
 def uplift_desk_button_schema(
-    class_: MockObjClass,
     command,
     icon: str = button._UNDEF,
     entity_category: str = button._UNDEF,
     device_class: str = button._UNDEF,
+    class_: MockObjClass,
 ):
     return button.button_schema(
         icon=icon, entity_category=entity_category, device_class=device_class
