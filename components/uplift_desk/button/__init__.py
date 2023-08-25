@@ -11,6 +11,7 @@ from esphome.const import (
     ENTITY_CATEGORY_NONE,
     CONF_COMMAND,
 )
+from esphome.cpp_generator import MockObjClass
 from .. import uplift_desk_ns, UPLIFT_DESK_COMPONENT_SCHEMA, CONF_UPLIFT_DESK_ID
 from .const import *
 
@@ -36,6 +37,7 @@ TYPES = [
 
 
 def uplift_desk_button_schema(
+    class_: MockObjClass,
     command,
     icon: str = button._UNDEF,
     entity_category: str = button._UNDEF,
