@@ -7,7 +7,6 @@ from esphome.const import (
     DEVICE_CLASS_RESTART,
     ENTITY_CATEGORY_CONFIG,
     ENTITY_CATEGORY_DIAGNOSTIC,
-    ENTITY_CATEGORY_NONE,
     CONF_COMMAND,
 )
 from esphome.cpp_generator import MockObjClass
@@ -58,7 +57,6 @@ CONFIG_SCHEMA = cv.Schema(
             COMMAND_STOP,
             class_=MockObjClass,
             icon=ICON_STOP,
-            entity_category=ENTITY_CATEGORY_NONE,
         ),
         cv.Optional(CONF_SAVE_PRESET_1): uplift_desk_button_schema(
             COMMAND_SAVE_PRESET_1,
