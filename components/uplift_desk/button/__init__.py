@@ -16,7 +16,7 @@ from .const import *
 
 AUTO_LOAD = ["uplift_desk"]
 
-UpliftDeskButton = uplift_desk_ns.class_("UpliftDeskButton", cg.Component)
+UpliftDeskButton = uplift_desk_ns.class_("UpliftDeskButton", button.Button)
 
 TYPES = [
     CONF_STOP,
@@ -39,9 +39,10 @@ def uplift_desk_button_schema(
     command,
     icon: str = button._UNDEF,
     entity_category: str = button._UNDEF,
+    device_class: str = button._UNDEF,
 ):
     return button.button_schema(
-        icon=icon, entity_category=entity_category
+        icon=icon, entity_category=entity_category, device_class=device_class
     ).extend(
         {
             cv.GenerateID(): cv.declare_id(UpliftDeskButton),
