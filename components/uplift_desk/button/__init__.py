@@ -36,8 +36,8 @@ TYPES = [
 
 
 def uplift_desk_button_schema(
-    class_,
     command,
+    class_,
     icon: str = button._UNDEF,
     entity_category: str = button._UNDEF,
     device_class: str = button._UNDEF,
@@ -61,7 +61,7 @@ CONFIG_SCHEMA = cv.Schema(
             entity_category=ENTITY_CATEGORY_NONE,
         ),
         cv.Optional(CONF_SAVE_PRESET_1): uplift_desk_button_schema(
-            COMMAND_SAVE_PRESET_1,
+            command=COMMAND_SAVE_PRESET_1,
             icon=ICON_FLOPPY,
             entity_category=ENTITY_CATEGORY_CONFIG,
         ),
