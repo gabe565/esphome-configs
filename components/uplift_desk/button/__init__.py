@@ -16,7 +16,7 @@ from .const import *
 
 AUTO_LOAD = ["uplift_desk"]
 
-UpliftDeskButton = uplift_desk_ns.class_("UpliftDeskButton", button.Button)
+UpliftDeskButton = uplift_desk_ns.class_("UpliftDeskButton", cg.Component)
 
 TYPES = [
     CONF_STOP,
