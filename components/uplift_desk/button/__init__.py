@@ -62,51 +62,69 @@ CONFIG_SCHEMA = cv.Schema(
         ),
         cv.Optional(CONF_SAVE_PRESET_1): uplift_desk_button_schema(
             command=COMMAND_SAVE_PRESET_1,
+            class_=MockObjClass,
             icon=ICON_FLOPPY,
             entity_category=ENTITY_CATEGORY_CONFIG,
         ),
         cv.Optional(CONF_SAVE_PRESET_2): uplift_desk_button_schema(
             COMMAND_SAVE_PRESET_2,
+            class_=MockObjClass,
             icon=ICON_FLOPPY,
             entity_category=ENTITY_CATEGORY_CONFIG,
         ),
         cv.Optional(CONF_SAVE_PRESET_3): uplift_desk_button_schema(
             COMMAND_SAVE_PRESET_3,
+            class_=MockObjClass,
             icon=ICON_FLOPPY,
             entity_category=ENTITY_CATEGORY_CONFIG,
         ),
         cv.Optional(CONF_SAVE_PRESET_4): uplift_desk_button_schema(
             COMMAND_SAVE_PRESET_4,
+            class_=MockObjClass,
             icon=ICON_FLOPPY,
             entity_category=ENTITY_CATEGORY_CONFIG,
         ),
         cv.Optional(CONF_PRESET_1): uplift_desk_button_schema(
-            COMMAND_PRESET_1, icon=ICON_NUMERIC_1_BOX
+            COMMAND_PRESET_1,
+            class_=MockObjClass,
+            icon=ICON_NUMERIC_1_BOX
         ),
         cv.Optional(CONF_PRESET_2): uplift_desk_button_schema(
-            COMMAND_PRESET_2, icon=ICON_NUMERIC_2_BOX
+            COMMAND_PRESET_2,
+            class_=MockObjClass,
+            icon=ICON_NUMERIC_2_BOX
         ),
         cv.Optional(CONF_PRESET_3): uplift_desk_button_schema(
-            COMMAND_PRESET_3, icon=ICON_NUMERIC_3_BOX
+            COMMAND_PRESET_3, 
+            class_=MockObjClass,
+            icon=ICON_NUMERIC_3_BOX
         ),
         cv.Optional(CONF_PRESET_4): uplift_desk_button_schema(
-            COMMAND_PRESET_4, icon=ICON_NUMERIC_4_BOX
+            COMMAND_PRESET_4, 
+            class_=MockObjClass,
+            icon=ICON_NUMERIC_4_BOX
         ),
         cv.Optional(CONF_SYNC): uplift_desk_button_schema(
-            COMMAND_SYNC, icon=ICON_SYNC, entity_category=ENTITY_CATEGORY_DIAGNOSTIC
+            COMMAND_SYNC, 
+            class_=MockObjClass,
+            icon=ICON_SYNC, 
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC
         ),
         cv.Optional(CONF_LIMIT_SET_MIN): uplift_desk_button_schema(
             COMMAND_LIMIT_SET_MIN,
+            class_=MockObjClass,
             icon=ICON_FORMAT_VERTICAL_ALIGN_BOTTOM,
             entity_category=ENTITY_CATEGORY_CONFIG,
         ),
         cv.Optional(CONF_LIMIT_SET_MAX): uplift_desk_button_schema(
             COMMAND_LIMIT_SET_MAX,
+            class_=MockObjClass,
             icon=ICON_FORMAT_VERTICAL_ALIGN_TOP,
             entity_category=ENTITY_CATEGORY_CONFIG,
         ),
         cv.Optional(CONF_LIMIT_CLEAR): uplift_desk_button_schema(
             COMMAND_LIMIT_CLEAR,
+            class_=MockObjClass,
             icon=ICON_CLOSE_BOX,
             entity_category=ENTITY_CATEGORY_CONFIG,
         ),
