@@ -7,7 +7,6 @@ from esphome.const import (
     DEVICE_CLASS_RESTART,
     ENTITY_CATEGORY_CONFIG,
     ENTITY_CATEGORY_DIAGNOSTIC,
-    ENTITY_CATEGORY_CONFIG,
     ENTITY_CATEGORY_NONE,
     CONF_COMMAND,
 )
@@ -37,14 +36,14 @@ TYPES = [
 
 
 def uplift_desk_button_schema(
-    command,
     class_: MockObjClass,
+    command,
     icon: str = button._UNDEF,
     entity_category: str = button._UNDEF,
     device_class: str = button._UNDEF,
 ):
     return button.button_schema(
-        class_=class_, icon=icon, entity_category=entity_category, device_class=device_class
+        icon=icon, entity_category=entity_category, device_class=device_class
     ).extend(
         {
             cv.GenerateID(): cv.declare_id(UpliftDeskButton),
@@ -56,7 +55,7 @@ def uplift_desk_button_schema(
 CONFIG_SCHEMA = cv.Schema(
     {
         cv.Optional(CONF_STOP): uplift_desk_button_schema(
-            COMMAND_STOP,
+            command=COMMAND_STOP,
             icon=ICON_STOP,
             entity_category=ENTITY_CATEGORY_NONE,
         ),
