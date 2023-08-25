@@ -56,12 +56,12 @@ CONFIG_SCHEMA = cv.Schema(
     {
         cv.Optional(CONF_STOP): uplift_desk_button_schema(
             class_=MockObjClass,
-            command=COMMAND_STOP,
+            COMMAND_STOP,
             icon=ICON_STOP,
             entity_category=ENTITY_CATEGORY_NONE,
         ),
         cv.Optional(CONF_SAVE_PRESET_1): uplift_desk_button_schema(
-            command=COMMAND_SAVE_PRESET_1,
+            COMMAND_SAVE_PRESET_1,
             class_=MockObjClass,
             icon=ICON_FLOPPY,
             entity_category=ENTITY_CATEGORY_CONFIG,
