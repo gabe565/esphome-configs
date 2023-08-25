@@ -55,6 +55,7 @@ def uplift_desk_button_schema(
 CONFIG_SCHEMA = cv.Schema(
     {
         cv.Optional(CONF_STOP): uplift_desk_button_schema(
+            class_=MockObjClass,
             command=COMMAND_STOP,
             icon=ICON_STOP,
             entity_category=ENTITY_CATEGORY_NONE,
