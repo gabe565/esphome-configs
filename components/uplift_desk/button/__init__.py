@@ -39,10 +39,9 @@ def uplift_desk_button_schema(
     command,
     icon: str = button._UNDEF,
     entity_category: str = button._UNDEF,
-#    device_class: str = button._UNDEF,
 ):
     return button.button_schema(
-        icon=icon, entity_category=entity_category, device_class=device_class
+        icon=icon, entity_category=entity_category
     ).extend(
         {
             cv.GenerateID(): cv.declare_id(UpliftDeskButton),
