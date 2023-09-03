@@ -7,9 +7,9 @@ from esphome.const import (
     DEVICE_CLASS_RESTART,
     ENTITY_CATEGORY_CONFIG,
     ENTITY_CATEGORY_DIAGNOSTIC,
-    ENTITY_CATEGORY_CONFIG,
     CONF_COMMAND,
 )
+from esphome.cpp_generator import MockObjClass
 from .. import uplift_desk_ns, UPLIFT_DESK_COMPONENT_SCHEMA, CONF_UPLIFT_DESK_ID
 from .const import *
 
@@ -36,12 +36,13 @@ TYPES = [
 
 def uplift_desk_button_schema(
     command,
+    class_,
     icon: str = button._UNDEF,
     entity_category: str = button._UNDEF,
     device_class: str = button._UNDEF,
 ):
     return button.button_schema(
-        icon=icon, entity_category=entity_category, device_class=device_class
+        class_=class_, icon=icon, entity_category=entity_category, device_class=device_class
     ).extend(
         {
             cv.GenerateID(): cv.declare_id(UpliftDeskButton),
@@ -52,54 +53,76 @@ def uplift_desk_button_schema(
 
 CONFIG_SCHEMA = cv.Schema(
     {
-        cv.Optional(CONF_STOP): uplift_desk_button_schema(COMMAND_STOP, icon=ICON_STOP),
+        cv.Optional(CONF_STOP): uplift_desk_button_schema(
+            COMMAND_STOP,
+            class_=MockObjClass,
+            icon=ICON_STOP,
+        ),
         cv.Optional(CONF_SAVE_PRESET_1): uplift_desk_button_schema(
             COMMAND_SAVE_PRESET_1,
+            class_=MockObjClass,
             icon=ICON_FLOPPY,
             entity_category=ENTITY_CATEGORY_CONFIG,
         ),
         cv.Optional(CONF_SAVE_PRESET_2): uplift_desk_button_schema(
             COMMAND_SAVE_PRESET_2,
+            class_=MockObjClass,
             icon=ICON_FLOPPY,
             entity_category=ENTITY_CATEGORY_CONFIG,
         ),
         cv.Optional(CONF_SAVE_PRESET_3): uplift_desk_button_schema(
             COMMAND_SAVE_PRESET_3,
+            class_=MockObjClass,
             icon=ICON_FLOPPY,
             entity_category=ENTITY_CATEGORY_CONFIG,
         ),
         cv.Optional(CONF_SAVE_PRESET_4): uplift_desk_button_schema(
             COMMAND_SAVE_PRESET_4,
+            class_=MockObjClass,
             icon=ICON_FLOPPY,
             entity_category=ENTITY_CATEGORY_CONFIG,
         ),
         cv.Optional(CONF_PRESET_1): uplift_desk_button_schema(
-            COMMAND_PRESET_1, icon=ICON_NUMERIC_1_BOX
+            COMMAND_PRESET_1,
+            class_=MockObjClass,
+            icon=ICON_NUMERIC_1_BOX
         ),
         cv.Optional(CONF_PRESET_2): uplift_desk_button_schema(
-            COMMAND_PRESET_2, icon=ICON_NUMERIC_2_BOX
+            COMMAND_PRESET_2,
+            class_=MockObjClass,
+            icon=ICON_NUMERIC_2_BOX
         ),
         cv.Optional(CONF_PRESET_3): uplift_desk_button_schema(
-            COMMAND_PRESET_3, icon=ICON_NUMERIC_3_BOX
+            COMMAND_PRESET_3, 
+            class_=MockObjClass,
+            icon=ICON_NUMERIC_3_BOX
         ),
         cv.Optional(CONF_PRESET_4): uplift_desk_button_schema(
-            COMMAND_PRESET_4, icon=ICON_NUMERIC_4_BOX
+            COMMAND_PRESET_4, 
+            class_=MockObjClass,
+            icon=ICON_NUMERIC_4_BOX
         ),
         cv.Optional(CONF_SYNC): uplift_desk_button_schema(
-            COMMAND_SYNC, icon=ICON_SYNC, entity_category=ENTITY_CATEGORY_DIAGNOSTIC
+            COMMAND_SYNC, 
+            class_=MockObjClass,
+            icon=ICON_SYNC, 
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC
         ),
         cv.Optional(CONF_LIMIT_SET_MIN): uplift_desk_button_schema(
             COMMAND_LIMIT_SET_MIN,
+            class_=MockObjClass,
             icon=ICON_FORMAT_VERTICAL_ALIGN_BOTTOM,
             entity_category=ENTITY_CATEGORY_CONFIG,
         ),
         cv.Optional(CONF_LIMIT_SET_MAX): uplift_desk_button_schema(
             COMMAND_LIMIT_SET_MAX,
+            class_=MockObjClass,
             icon=ICON_FORMAT_VERTICAL_ALIGN_TOP,
             entity_category=ENTITY_CATEGORY_CONFIG,
         ),
         cv.Optional(CONF_LIMIT_CLEAR): uplift_desk_button_schema(
             COMMAND_LIMIT_CLEAR,
+            class_=MockObjClass,
             icon=ICON_CLOSE_BOX,
             entity_category=ENTITY_CATEGORY_CONFIG,
         ),
