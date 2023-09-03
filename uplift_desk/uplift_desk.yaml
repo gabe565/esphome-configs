@@ -1,6 +1,7 @@
 packages:
   common: !include packages/common.yaml
   nodemcu: !include packages/nodemcu.yaml
+  uplift_desk: !include packages/uplift_desk.yaml
 
 substitutions:
   device_id: uplift_desk
