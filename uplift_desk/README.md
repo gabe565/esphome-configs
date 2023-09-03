@@ -2,7 +2,7 @@
 
 <img src="../../assets/uplift_desk/home-assistant.png?raw=true" width="50%">
 
-A configuration for [Uplift Desk](https://www.upliftdesk.com/) desks. Uses the RJ12 port labeled `F`. This is the same port that the official (and unfortunately discontinued) Uplift Connect dongle uses.
+A configuration for [Uplift Desk](https://www.upliftdesk.com/) desks using the RJ12 port on the control box. This is the same port that the official [bluetooth adapter](https://www.upliftdesk.com/bluetooth-adapter-for-uplift-desk/) uses.
 
 ## Supported Features
 
@@ -14,10 +14,10 @@ Currently, this integration supports the following:
   - Stop
   - Save preset 1-4
   - Recall preset 1-4
-  - Request an updated height reading (I decided to name it Sync)
+  - Sync current height reading from the desk
   - Set a maximum height limit
   - Set a minimum height limit
-  - Clear any height limit
+  - Clear an height limits
 - Sensors
   - Current height reading
 
@@ -25,9 +25,9 @@ Currently, this integration supports the following:
 
 <img src="../../assets/uplift_desk/desk-pinout.jpg?raw=true" style="width: 25%">
 
-I found the Uplift Connect dongle pinout via the [FCC filing](https://fccid.io/2ANKDJCP35NBLT/Internal-Photos/Internal-Photos-3727739) (Thanks to deadman96385 for sending that my way)
+I found the Uplift Connect dongle pinout via the [FCC filing](https://fccid.io/2ANKDJCP35NBLT/Internal-Photos/Internal-Photos-3727739) (Thanks to [deadman96385](https://github.com/deadman96385) for sending that my way)
 
-There are 6 PINs on the desk's RJ12 port. The first and sixth PIN are not needed. All communication occurs over UART and the ESP chip can be powered off of the 5v and GND PINs.
+There are 6 PINs on the desk's RJ12 port. The first and sixth PIN are not used. All communication occurs over UART and the ESP chip can be powered off of the 5v and GND PINs.
 The port's pinout from left to right is as follows:
 
 1. ? (Not known but not necessary)
@@ -41,8 +41,9 @@ The port's pinout from left to right is as follows:
 
 <img src="../../assets/uplift_desk/esp-wiring.jpg?raw=true" style="width: 25%">
 
-My current hardware could use a little polish, but I mounted it under my desk and never have to see it so I don't mind for the moment!  
-I use a NodeMCU in my setup. They can be powered off of 5v, so I directly power the ESP from the desk's 5v output.
+I use a NodeMCU spliced to a 4-inch RJ12. They can be powered off of 5v, so I directly power the ESP from the desk's 5v output.
+
+My current hardware could use a little polish, but I mounted it under my desk and never have to see it so I don't mind for now.
 
 ## Software Setup
 
@@ -63,11 +64,11 @@ I noticed a lot of the Uplift Desk UART commands correspond to the commands docu
 - Reset
 - Height calibration
 
-I have implemented a "go to height" action locally, but it always ends up one or two inches off due to the speed of the desk. Slows down as it approaches a preset value. I would like to be able to do this when calling the "go to height" action, but I have not come across any indication that the desk supports speed values over UART. If it is not possible then I may be able to hone in the action by stopping it early, but so far it seems to be pretty inconsistent.
+I am testing a "go to height" action, but it isn't perfect since the desk runs at full speed until it is commanded to stop. This is different than when the desk is moving to a preset, since it will slow down as it approaches the preset value. I would like to be able to do this when calling the "go to height" action, but I have not come across any indication that the desk supports speed values over UART. If it's not possible, I may be able to hone in the action by stopping it early, but so far it seems to be pretty inconsistent.
 
 ### Responses
 
-- Sending a sync command makes the desk send its current height along with the saved heights of all 4 presets. I have not been able to decipher the preset heights. The values seem to be more precise than inches, with the second value as a decimal, but so far I have been unable to correlate them to actual height values or find any helpful calibration output. I will post a table of observed values below.
+- Sending a sync command makes the desk send its current height along with the saved heights of all 4 presets. I have not been able to decipher the preset heights. The values seem to be more precise than inches, with the second value as a decimal, but so far I have been unable to correlate them to actual height values or find any helpful calibration output. See my observed values below. Feel free to post any thoughts in [#2](https://github.com/gabe565/esphome-configs/issues/2).
 
 <details>
   <summary>Click to view observed prefix values</summary>
