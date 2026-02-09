@@ -5,7 +5,7 @@
 namespace esphome {
 namespace uplift_desk {
 
-static const char *TAG = "uplift_desk.button";
+static const char *const TAG = "uplift_desk.button";
 
 void UpliftDeskButton::press_action() {
     ESP_LOGD(TAG, "'%s': Sending command...", this->get_name().c_str());

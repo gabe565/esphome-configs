@@ -23,10 +23,10 @@ class UpliftDeskSwitch : public switch_::Switch, public Component {
   void write_command_();
   void write_stop_();
   void write_state(bool state) override;
-  uint8_t command_;
-  uint32_t send_every_;
-  uint32_t last_transmission_;
-  UpliftDeskComponent *uplift_desk_;
+  uint8_t command_{0};
+  uint32_t send_every_{0};
+  uint32_t last_transmission_{0};
+  UpliftDeskComponent *uplift_desk_{nullptr};
   std::vector<UpliftDeskSwitch *> interlock_;
   uint32_t interlock_wait_time_{0};
 };

@@ -5,7 +5,7 @@
 namespace esphome {
 namespace uplift_desk {
 
-static const char *TAG = "uplift_desk.switch";
+static const char *const TAG = "uplift_desk.switch";
 
 void UpliftDeskSwitch::loop() {
   if (this->state && this->send_every_) {

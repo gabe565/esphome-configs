@@ -1,19 +1,15 @@
-from esphome.core import coroutine
 import esphome.codegen as cg
 import esphome.config_validation as cv
-from esphome.components import switch, template
+from esphome.components import switch
 from esphome.const import (
-    CONF_ENTITY_CATEGORY,
+    CONF_COMMAND,
+    CONF_ICON,
     CONF_ID,
     CONF_INVERTED,
-    CONF_ICON,
-    ENTITY_CATEGORY_CONFIG,
-    ICON_POWER,
-    CONF_COMMAND,
     CONF_SEND_EVERY,
-    CONF_INTERLOCK,
 )
-from .. import uplift_desk_ns, UPLIFT_DESK_COMPONENT_SCHEMA, CONF_UPLIFT_DESK_ID
+
+from .. import CONF_UPLIFT_DESK_ID, UPLIFT_DESK_COMPONENT_SCHEMA, uplift_desk_ns
 
 AUTO_LOAD = ["uplift_desk"]
 
@@ -34,15 +30,10 @@ TYPES = [
     CONF_DOWN,
 ]
 
-UPLIFT_DESK_SWITCH_SCHEMA = switch._SWITCH_SCHEMA.extend(
+UPLIFT_DESK_SWITCH_SCHEMA = switch.switch_schema(UpliftDeskSwitch).extend(
     {
-        cv.GenerateID(): cv.declare_id(UpliftDeskSwitch),
-        cv.Optional(
-            CONF_SEND_EVERY, default="1s"
-        ): cv.positive_time_period_milliseconds,
-        cv.Optional(CONF_INVERTED): cv.invalid(
-            "Uplift Desk switches do not support inverted mode!"
-        ),
+        cv.Optional(CONF_SEND_EVERY, default="1s"): cv.positive_time_period_milliseconds,
+        cv.Optional(CONF_INVERTED): cv.invalid("Uplift Desk switches do not support inverted mode!"),
     }
 )
 
@@ -61,38 +52,36 @@ CONFIG_SCHEMA = cv.Schema(
                 cv.Optional(CONF_COMMAND, default=COMMAND_DOWN): cv.hex_int,
             }
         ),
-        cv.Optional(
-            CONF_INTERLOCK_WAIT_TIME, default="1s"
-        ): cv.positive_time_period_milliseconds,
+        cv.Optional(CONF_INTERLOCK_WAIT_TIME, default="1s"): cv.positive_time_period_milliseconds,
     }
 ).extend(UPLIFT_DESK_COMPONENT_SCHEMA)
 
 
-@coroutine
-async def setup_conf(globalConfig, key, hub):
-    if key in globalConfig:
-        config = globalConfig[key]
-        var = cg.new_Pvariable(config[CONF_ID])
-        await cg.register_component(var, config)
-        await switch.register_switch(var, config)
+async def setup_conf(config, key, hub):
+    if key in config:
+        conf = config[key]
+        var = cg.new_Pvariable(conf[CONF_ID])
+        await cg.register_component(var, conf)
+        await switch.register_switch(var, conf)
 
         cg.add(var.set_uplift_desk(hub))
-        cg.add(var.set_command(config[CONF_COMMAND]))
+        cg.add(var.set_command(conf[CONF_COMMAND]))
 
-        if CONF_SEND_EVERY in config:
-            cg.add(var.set_send_every(config[CONF_SEND_EVERY]))
+        if CONF_SEND_EVERY in conf:
+            cg.add(var.set_send_every(conf[CONF_SEND_EVERY]))
 
         return var
+    return None
 
 
-def to_code(config):
-    hub = yield cg.get_variable(config[CONF_UPLIFT_DESK_ID])
-    vars = {}
+async def to_code(config):
+    hub = await cg.get_variable(config[CONF_UPLIFT_DESK_ID])
+    switches = {}
     for key in TYPES:
-        vars[key] = yield setup_conf(config, key, hub)
+        switches[key] = await setup_conf(config, key, hub)
 
-    if not vars[CONF_UP] is None and not vars[CONF_DOWN] is None:
-        cg.add(vars[CONF_UP].set_interlock([vars[CONF_DOWN]]))
-        cg.add(vars[CONF_UP].set_interlock_wait_time(config[CONF_INTERLOCK_WAIT_TIME]))
-        cg.add(vars[CONF_DOWN].set_interlock([vars[CONF_UP]]))
-        cg.add(vars[CONF_DOWN].set_interlock_wait_time(config[CONF_INTERLOCK_WAIT_TIME]))
+    if switches[CONF_UP] is not None and switches[CONF_DOWN] is not None:
+        cg.add(switches[CONF_UP].set_interlock([switches[CONF_DOWN]]))
+        cg.add(switches[CONF_UP].set_interlock_wait_time(config[CONF_INTERLOCK_WAIT_TIME]))
+        cg.add(switches[CONF_DOWN].set_interlock([switches[CONF_UP]]))
+        cg.add(switches[CONF_DOWN].set_interlock_wait_time(config[CONF_INTERLOCK_WAIT_TIME]))

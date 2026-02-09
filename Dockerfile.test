@@ -1,0 +1,50 @@
+# syntax=docker/dockerfile:1
+
+# Stage 1: Lint and static analysis (Alpine for speed)
+FROM python:3.13-alpine3.23 AS lint
+
+RUN --mount=type=cache,target=/var/cache/apk \
+    apk add cppcheck
+
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install ruff
+
+WORKDIR /app
+COPY requirements.txt .
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install -r requirements.txt
+
+COPY . .
+
+RUN echo "=== Ruff check ===" && ruff check components/ && \
+    echo "=== Ruff format ===" && ruff format --check components/
+
+RUN ESPHOME_INCLUDE=$(python3 -c "import esphome, os; print(os.path.dirname(os.path.dirname(esphome.__file__)))") && \
+    echo "=== cppcheck (include: $ESPHOME_INCLUDE) ===" && \
+    cppcheck \
+        -I "$ESPHOME_INCLUDE" \
+        --enable=warning,style,performance \
+        --suppress=normalCheckLevelMaxBranches \
+        --suppress=toomanyconfigs \
+        --suppress="*:$ESPHOME_INCLUDE/*" \
+        --suppress=useStlAlgorithm \
+        --error-exitcode=1 \
+        components/
+
+# Stage 2: Firmware compile (Debian for glibc compatibility with PlatformIO toolchains)
+FROM python:3.13-slim AS compile
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends git && \
+    rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+COPY requirements.txt .
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install -r requirements.txt
+
+COPY . .
+
+RUN --mount=type=cache,target=/root/.platformio \
+    echo "=== ESPHome compile ===" && \
+    esphome compile uplift_desk/test_esp32c6.yaml

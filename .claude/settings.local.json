@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:developers.esphome.io)",
+      "WebFetch(domain:esphome.io)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:snyk.io)",
+      "Bash(ls:*)",
+      "Bash(test:*)",
+      "Bash(pip install:*)",
+      "Bash(docker build:*)",
+      "Bash(docker run --rm python:3.12-slim sh -c \"pip install ''esphome>=2025.12'' 2>/dev/null && find / -path ''*/esphome/core/component.h'' 2>/dev/null\")",
+      "Bash(docker run:*)",
+      "WebFetch(domain:pyrefly.org)",
+      "Bash(DOCKER_BUILDKIT=1 docker build:*)"
+    ]
+  }
+}

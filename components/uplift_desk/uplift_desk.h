@@ -64,7 +64,7 @@ class UpliftDeskComponent : public Component, public uart::UARTDevice {
   void parse_data_();
   void reset_buffer_();
 
-  uint8_t buffer_[16];
+  uint8_t buffer_[16]{0};
   uint8_t buffer_index_{0};
   uint8_t eot_index_{15};
   uint32_t last_transmission_{0};

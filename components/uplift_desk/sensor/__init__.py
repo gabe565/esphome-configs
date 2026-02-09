@@ -1,9 +1,8 @@
-from esphome.core import coroutine
 import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome.components import sensor
-from esphome.const import CONF_ID, DEVICE_CLASS_EMPTY
-from .. import uplift_desk_ns, UPLIFT_DESK_COMPONENT_SCHEMA, CONF_UPLIFT_DESK_ID
+
+from .. import CONF_UPLIFT_DESK_ID, UPLIFT_DESK_COMPONENT_SCHEMA
 
 AUTO_LOAD = ["uplift_desk"]
 
@@ -26,28 +25,23 @@ CONFIG_SCHEMA = cv.Schema(
             unit_of_measurement=UNIT_INCHES,
             icon=ICON_ARROW_EXPAND_VERTICAL,
             accuracy_decimals=1,
-            device_class=DEVICE_CLASS_EMPTY
         ),
         cv.Optional(CONF_STATE): sensor.sensor_schema(
-            unit_of_measurement=cv.UNDEFINED,
-            icon=cv.UNDEFINED,
             accuracy_decimals=0,
-            device_class=DEVICE_CLASS_EMPTY
         ),
     }
 ).extend(UPLIFT_DESK_COMPONENT_SCHEMA)
 
 
-@coroutine
-def setup_conf(globalConfig, key, hub, func_name):
-    if key in globalConfig:
-        config = globalConfig[key]
-        var = yield sensor.new_sensor(config)
+async def setup_conf(config, key, hub, func_name):
+    if key in config:
+        conf = config[key]
+        var = await sensor.new_sensor(conf)
         func = getattr(hub, func_name)
         cg.add(func(var))
 
 
-def to_code(config):
-    hub = yield cg.get_variable(config[CONF_UPLIFT_DESK_ID])
-    for key, funcName in TYPES.items():
-        yield setup_conf(config, key, hub, funcName)
+async def to_code(config):
+    hub = await cg.get_variable(config[CONF_UPLIFT_DESK_ID])
+    for key, func_name in TYPES.items():
+        await setup_conf(config, key, hub, func_name)

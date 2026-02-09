@@ -3,12 +3,26 @@ name: Validate
 on: push
 
 jobs:
-  validate:
-    name: Validate
+  lint:
+    name: Lint
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        package: ["nitebird_light_strip", "opengarage", "uplift_desk"]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Setup Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: '3.x'
+      - name: Install ruff
+        run: pip install ruff
+      - name: Ruff check
+        run: ruff check components/
+      - name: Ruff format
+        run: ruff format --check components/
+
+  cppcheck:
+    name: C++ Static Analysis
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -17,20 +31,40 @@ jobs:
         with:
           python-version: '3.x'
           cache: pip
-      - name: Install requirements
+      - name: Install dependencies
         run: |
+          sudo apt-get update && sudo apt-get install -y cppcheck
           pip install -r requirements.txt
-      - name: Copy common config
+      - name: Run cppcheck
         run: |
-          rsync -av --ignore-existing common/packages/ ${{ matrix.package }}/packages/
-      - name: Template secrets
-        run: |
-          yq --inplace 'keys | .[] as $val ireduce({}; .[$val] = "test_" + $val)' \
-            ${{ matrix.package }}/secrets.yaml common/secrets.yaml
-      - name: Test Config
-        run: |
-          for config in ${{ matrix.package }}/*.yaml; do
-            if [[ "$config" != */secrets.yaml ]]; then
-              esphome config "$config"
-            fi
-          done
+          ESPHOME_INCLUDE=$(python3 -c "import esphome, os; print(os.path.dirname(os.path.dirname(esphome.__file__)))")
+          cppcheck \
+            -I "$ESPHOME_INCLUDE" \
+            --enable=warning,style,performance \
+            --suppress=normalCheckLevelMaxBranches \
+            --suppress=toomanyconfigs \
+            --suppress="*:$ESPHOME_INCLUDE/*" \
+            --suppress=useStlAlgorithm \
+            --error-exitcode=1 \
+            components/
+
+  compile:
+    name: Compile Firmware
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Setup Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: '3.x'
+          cache: pip
+      - name: Cache PlatformIO
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+        with:
+          path: ~/.platformio
+          key: platformio-${{ hashFiles('requirements.txt') }}
+      - name: Install requirements
+        run: pip install -r requirements.txt
+      - name: Compile test firmware
+        run: esphome compile uplift_desk/test_esp32c6.yaml

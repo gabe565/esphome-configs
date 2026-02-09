@@ -7,9 +7,7 @@ CODEOWNERS = ["@gabe565"]
 DEPENDENCIES = ["uart"]
 
 uplift_desk_ns = cg.esphome_ns.namespace("uplift_desk")
-UpliftDeskComponent = uplift_desk_ns.class_(
-    "UpliftDeskComponent", cg.Component, uart.UARTDevice
-)
+UpliftDeskComponent = uplift_desk_ns.class_("UpliftDeskComponent", cg.Component, uart.UARTDevice)
 
 CONF_UPLIFT_DESK_ID = "uplift_desk_id"
 
@@ -30,7 +28,7 @@ UPLIFT_DESK_COMPONENT_SCHEMA = cv.Schema(
 )
 
 
-def to_code(config):
+async def to_code(config):
     var = cg.new_Pvariable(config[CONF_ID])
-    yield cg.register_component(var, config)
-    yield uart.register_uart_device(var, config)
+    await cg.register_component(var, config)
+    await uart.register_uart_device(var, config)

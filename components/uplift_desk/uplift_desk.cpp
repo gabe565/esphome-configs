@@ -8,20 +8,20 @@
 namespace esphome {
 namespace uplift_desk {
 
-static const char *TAG = "uplift_desk";
+static const char *const TAG = "uplift_desk";
 
 const uint8_t STATE_IDLE = 0;
 const uint8_t STATE_MOVING_UP = 1;
 const uint8_t STATE_MOVING_DOWN = 2;
 
-void log_buffer(uint8_t *buffer, uint8_t eot_index) {
+void log_buffer(const uint8_t *buffer, uint8_t eot_index) {
   for (uint8_t i = 0; i <= eot_index; i++) {
     ESP_LOGV(TAG, "  i=%u: 0b" BYTE_TO_BINARY_PATTERN " (0x%02X, %i)", i, BYTE_TO_BINARY(buffer[i]),
              buffer[i], buffer[i]);
   }
 }
 
-UpliftDeskComponent::UpliftDeskComponent() : uart::UARTDevice() {};
+UpliftDeskComponent::UpliftDeskComponent() = default;
 
 void UpliftDeskComponent::setup() {
    this->defer([this]() { this->send_cmd_sync(); });
@@ -66,6 +66,11 @@ bool UpliftDeskComponent::check_byte_() {
 
   if (index == 3) {
     this->eot_index_ = index + byte + 2;  // CRC and EOT not included
+    if (this->eot_index_ >= UPLIFT_DESK_BUFFER_LENGTH) {
+      ESP_LOGW(TAG, "Packet length out of range: %u", this->eot_index_);
+      this->eot_index_ = UPLIFT_DESK_BUFFER_LENGTH - 1;
+      return false;
+    }
     return true;
   }
 
@@ -129,8 +134,8 @@ void UpliftDeskComponent::parse_data_() {
     case 0x26:
     case 0x27:
     case 0x28: { // Preset height value response
-      uint8_t preset = (this->buffer_[2] - 0x25) + 1;
-      ESP_LOGV(TAG, "Preset %d height: [ %d, %d ]", preset, this->buffer_[4], this->buffer_[5]);
+      ESP_LOGV(TAG, "Preset %d height: [ %d, %d ]", (this->buffer_[2] - 0x25) + 1, this->buffer_[4],
+               this->buffer_[5]);
       break;
     }
     default: {
